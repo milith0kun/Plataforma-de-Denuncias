@@ -1,8 +1,32 @@
 # 🏙️ Plataforma Web para Denuncia Ciudadana de Problemas Urbanos
 
+<div align="center">
+
+![Status](https://img.shields.io/badge/status-active-brightgreen)
+![Version](https://img.shields.io/badge/version-1.1.0-blue)
+![Frontend](https://img.shields.io/badge/frontend-70%25-yellow)
+![Backend](https://img.shields.io/badge/backend-95%25-success)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Contributors](https://img.shields.io/badge/contributors-4-orange)
+
+</div>
+
 > Sistema integral para la gestión de denuncias ciudadanas con geolocalización, evidencia fotográfica y seguimiento en tiempo real.
 
-� **[Guía de Despliegue](QUICKSTART.md)** | 📚 **[Inicio Rápido](INICIO_RAPIDO.md)** | 📋 **[Checklist Despliegue](DEPLOYMENT-CHECKLIST.md)** | 🎨 **[Sistema de Diseño](DESIGN_SYSTEM.md)**
+📚 **[Inicio Rápido](INICIO_RAPIDO.md)** | 🎨 **[Sistema de Diseño](DESIGN_SYSTEM.md)** | 📖 **[Contribuciones Dennis](README_DENNIS.md)** | 🔧 **[Guía de Contribución](CONTRIBUTING.md)**
+
+---
+
+## 📑 Tabla de Contenidos
+
+- [🌐 Producción](#-producción)
+- [📋 Descripción del Proyecto](#-descripción-del-proyecto)
+- [🚀 Tecnologías Utilizadas](#-tecnologías-utilizadas)
+- [📁 Estructura del Proyecto](#-estructura-del-proyecto)
+- [⚡ Instalación y Ejecución](#-instalación-y-ejecución)
+- [👥 Equipo y Contribuidores](#-equipo-y-contribuidores)
+- [📊 Estado del Proyecto](#-estado-del-proyecto)
+- [📄 Licencia](#-licencia)
 
 ---
 
@@ -10,7 +34,7 @@
 
 **URL:** https://plataformadenuncias.myvnc.com  
 **API:** https://plataformadenuncias.myvnc.com/api/v1  
-**Estado:** [![Status](https://img.shields.io/badge/status-ready-brightgreen)]()
+**Estado:** ✅ Funcional
 
 ---
 
@@ -267,13 +291,61 @@ npm run dev
 
 ---
 
+## 👥 Equipo y Contribuidores
+
+### 🌟 Desarrolladores Principales
+
+<table>
+  <tr>
+    <td align="center">
+      <strong>Edmil Saire</strong><br/>
+      <em>Lead Developer & Backend</em><br/>
+      <small>Arquitectura base, Backend API, Database</small>
+    </td>
+    <td align="center">
+      <strong>Dennis Ccapatinta</strong><br/>
+      <em>Frontend Developer</em><br/>
+      <small>Sistema de notificaciones, Integraciones, Documentación</small><br/>
+      📖 <a href="README_DENNIS.md">Ver contribuciones</a>
+    </td>
+  </tr>
+</table>
+
+### 📊 Contribuciones por Área
+
+| Área | Responsable | Estado |
+|------|-------------|--------|
+| **Backend API** | Edmil Saire | 95% ✅ |
+| **Frontend Core** | Edmil Saire | 70% 🔄 |
+| **Notificaciones Toast** | Dennis Ccapatinta | 100% ✅ |
+| **Documentación** | Dennis Ccapatinta | 100% ✅ |
+| **Sistema de Diseño** | Equipo | 100% ✅ |
+| **Testing** | Pendiente | 30% ⏳ |
+
+### 🎯 Últimas Contribuciones
+
+#### Dennis Ccapatinta - Sprint 8 (Diciembre 2025)
+- ✅ Sistema completo de notificaciones Toast con Context API
+- ✅ Integración de notificaciones en Login y Registro
+- ✅ Documentación técnica completa (2000+ líneas)
+- ✅ Guías: README_DENNIS.md, CONTRIBUTING.md, CHANGELOG.md
+- ✅ Mejoras de validación documentadas
+
+📖 **[Ver documentación completa de contribuciones →](README_DENNIS.md)**
+
+---
+
 ## 🤝 Contribución
+
+¿Quieres contribuir? ¡Genial! Sigue estos pasos:
 
 1. Fork del proyecto
 2. Crear rama feature: `git checkout -b feature/nueva-funcionalidad`
 3. Commit cambios: `git commit -am 'Agregar nueva funcionalidad'`
 4. Push a la rama: `git push origin feature/nueva-funcionalidad`
 5. Crear Pull Request
+
+📋 **[Ver guía completa de contribución →](CONTRIBUTING.md)**
 
 ### Convenciones de Código
 
