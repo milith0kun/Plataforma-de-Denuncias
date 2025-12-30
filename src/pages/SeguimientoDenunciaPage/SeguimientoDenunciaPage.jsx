@@ -104,7 +104,7 @@ const SeguimientoDenunciaPage = () => {
       'cerrada': { color: 'var(--color-estado-cerrada)', icon: '🔒' }
     };
 
-    return mapeo[estado] || { color: 'var(--color-gray-500)', icon: '📋' };
+    return mapeo[estado] || { color: 'var(--color-estado-desconocido)', icon: '❓' }; // Fallback para estados desconocidos
   };
 
   const handleNavigation = (url) => {
