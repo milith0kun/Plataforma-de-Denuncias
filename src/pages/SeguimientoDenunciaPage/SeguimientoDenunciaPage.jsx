@@ -40,7 +40,8 @@ const SeguimientoDenunciaPage = () => {
         setError(response.message || 'Error al cargar denuncias');
       }
     } catch (err) {
-      setError('Error de conexión');
+      console.error('Error al cargar denuncias:', err);
+      setError(err.message || 'Error al cargar denuncias');
     } finally {
       setCargando(false);
     }
@@ -104,6 +105,12 @@ const SeguimientoDenunciaPage = () => {
     };
 
     return mapeo[estado] || { color: 'var(--color-gray-500)', icon: '📋' };
+  };
+
+  const handleNavigation = (url) => {
+    if (window.confirm('¿Estás seguro de que deseas salir de esta página? Se perderán los cambios no guardados.')) {
+      navigate(url);
+    }
   };
 
   if (cargando) {
@@ -221,14 +228,7 @@ const SeguimientoDenunciaPage = () => {
   const estiloEstadoActual = obtenerEstiloEstado(denuncia.estado_nombre);
 
   return (
-    <div
-      className={styles.pageContainer}
-      style={{
-        background: 'linear-gradient(to bottom, #f0f4f8, #d9e2ec)',
-        minHeight: '100vh',
-        padding: '20px',
-      }}
-    >
+    <div className={styles.pageContainer} style={{ background: 'linear-gradient(to bottom, #f0f4f8, #d9e2ec)' }}>
       <Header />
 
       <div className={styles.container}>
@@ -392,7 +392,7 @@ const SeguimientoDenunciaPage = () => {
           </button>
           <button
             className={styles.actionButtonSecondary}
-            onClick={() => navigate(-1)}
+            onClick={() => handleNavigation(-1)}
           >
             Volver a Mis Denuncias
           </button>
