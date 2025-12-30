@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
+import { useNotification } from '../../../contexts/NotificationContext';
 import Input from '../../../components/common/Input/Input';
 import Button from '../../../components/common/Button/Button';
 import Alert from '../../../components/common/Alert/Alert';
@@ -9,6 +10,7 @@ import styles from './RegisterPage.module.css';
 const RegisterPage = () => {
   const navigate = useNavigate();
   const { registrarCiudadano, error, estaAutenticado, esAutoridad, esCiudadano, cargando: authCargando } = useAuth();
+  const { showSuccess, showError, showWarning } = useNotification();
   const [formData, setFormData] = useState({
     nombres: '',
     apellidos: '',
@@ -100,6 +102,7 @@ const RegisterPage = () => {
     e.preventDefault();
 
     if (!validarFormulario()) {
+      showWarning('Por favor, completa todos los campos correctamente');
       return;
     }
 
@@ -108,9 +111,16 @@ const RegisterPage = () => {
       // Enviar solo los campos necesarios (sin confirmarPassword)
       const { confirmarPassword, ...datosRegistro } = formData;
       await registrarCiudadano(datosRegistro);
+
+      // Mostrar notificación de éxito
+      showSuccess('¡Registro exitoso! Bienvenido a la plataforma');
+
       navigate('/home'); // Redirigir a la página de inicio del usuario autenticado
     } catch (error) {
       console.error('Error en registro:', error);
+      // Mostrar notificación de error
+      const mensajeError = error.response?.data?.message || 'Error al registrar. Intenta nuevamente.';
+      showError(mensajeError);
     } finally {
       setCargando(false);
     }
