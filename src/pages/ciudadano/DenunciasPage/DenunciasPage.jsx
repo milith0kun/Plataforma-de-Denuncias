@@ -60,7 +60,8 @@ const ImagePlaceholderIcon = () => (
 // Función para obtener URL de imagen
 const obtenerUrlImagen = (evidencias) => {
   if (!evidencias || evidencias.length === 0) return null;
-  const foto = evidencias.find(e => e.tipo_evidencia === 'Foto');
+  // En este proyecto todas las evidencias en evidencias_foto son fotos
+  const foto = evidencias[0];
   if (!foto || !foto.url_archivo) return null;
 
   const url = foto.url_archivo;

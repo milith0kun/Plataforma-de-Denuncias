@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import Header from '../../components/common/Header/Header';
 import BottomNavigation from '../../components/common/BottomNavigation/BottomNavigation';
+import { useAuth } from '../../hooks/useAuth';
 import denunciaService from '../../services/denunciaService';
 import styles from './SeguimientoDenunciaPage.module.css';
 
@@ -62,9 +63,9 @@ const SeguimientoDenunciaPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-
-  const [denuncia, setDenuncia] = useState(null);
+  const { esAutoridad } = useAuth();
   const [denuncias, setDenuncias] = useState([]);
+  const [denuncia, setDenuncia] = useState(null);
   const [historial, setHistorial] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -141,12 +142,21 @@ const SeguimientoDenunciaPage = () => {
   };
 
   const calcularProgreso = () => {
-    if (!denuncia || !denuncia.id_estado_actual) return 0;
+    if (!denuncia || !denuncia.estado_nombre) return 0;
 
-    const estadoActual = parseInt(denuncia.id_estado_actual);
-    if (isNaN(estadoActual)) return 0;
+    // Mapear estados a números para calcular progreso
+    const estadoNombre = denuncia.estado_nombre?.toLowerCase().replace(/\s+/g, '') || '';
+    const mapeoEstados = {
+      'registrada': 1,
+      'pendiente': 2,
+      'enrevision': 2,
+      'enproceso': 3,
+      'asignada': 4,
+      'resuelta': 5,
+      'cerrada': 6
+    };
 
-    // Estados: 1=Registrada, 2=Pendiente, 3=En Proceso, 4=Asignada, 5=Resuelta, 6=Cerrada
+    const estadoActual = mapeoEstados[estadoNombre] || 1;
     const totalEstados = 5; // Máximo estado útil (Resuelta)
 
     // Calcular porcentaje basado en el estado actual
@@ -181,7 +191,7 @@ const SeguimientoDenunciaPage = () => {
             <p>Cargando seguimiento...</p>
           </div>
         </div>
-        {isMobile && <BottomNavigation userType="ciudadano" />}
+        {isMobile && <BottomNavigation userType={esAutoridad ? "autoridad" : "ciudadano"} />}
       </div>
     );
   }
@@ -201,7 +211,7 @@ const SeguimientoDenunciaPage = () => {
             </button>
           </div>
         </div>
-        {isMobile && <BottomNavigation userType="ciudadano" />}
+        {isMobile && <BottomNavigation userType={esAutoridad ? "autoridad" : "ciudadano"} />}
       </div>
     );
   }
@@ -278,7 +288,7 @@ const SeguimientoDenunciaPage = () => {
             </div>
           )}
         </div>
-        {isMobile && <BottomNavigation userType="ciudadano" />}
+        {isMobile && <BottomNavigation userType={esAutoridad ? "autoridad" : "ciudadano"} />}
       </div>
     );
   }
@@ -295,13 +305,14 @@ const SeguimientoDenunciaPage = () => {
             </button>
           </div>
         </div>
-        {isMobile && <BottomNavigation userType="ciudadano" />}
+        {isMobile && <BottomNavigation userType={esAutoridad ? "autoridad" : "ciudadano"} />}
       </div>
     );
   }
 
+  // Calcular valores solo si denuncia existe
   const progreso = calcularProgreso();
-  const estiloEstadoActual = obtenerEstiloEstado(denuncia.estado_nombre);
+  const estiloEstadoActual = obtenerEstiloEstado(denuncia?.estado_nombre);
 
   return (
     <div className={styles.pageContainer}>
@@ -321,8 +332,8 @@ const SeguimientoDenunciaPage = () => {
         <div className={styles.header}>
           <div className={styles.headerContent}>
             <h1 className={styles.title}>Seguimiento de Denuncia</h1>
-            <p className={styles.denunciaTitle}>{denuncia.titulo}</p>
-            <p className={styles.denunciaId}>ID: #{formatearIdDenuncia(denuncia.id_denuncia)}</p>
+            <p className={styles.denunciaTitle}>{denuncia?.titulo || 'Sin título'}</p>
+            <p className={styles.denunciaId}>ID: #{formatearIdDenuncia(denuncia?.id_denuncia)}</p>
           </div>
         </div>
 
@@ -334,7 +345,7 @@ const SeguimientoDenunciaPage = () => {
               <div>
                 <p className={styles.estadoLabel}>Estado Actual</p>
                 <p className={styles.estadoNombre} style={{ color: estiloEstadoActual.color }}>
-                  {denuncia.estado_nombre}
+                  {denuncia?.estado_nombre || 'Desconocido'}
                 </p>
               </div>
             </div>
@@ -363,21 +374,21 @@ const SeguimientoDenunciaPage = () => {
                 <span className={styles.infoIcon}><FolderIcon /></span>
                 <div>
                   <p className={styles.infoLabel}>Categoría</p>
-                  <p className={styles.infoValue}>{denuncia.categoria_nombre}</p>
+                  <p className={styles.infoValue}>{denuncia?.categoria_nombre || 'N/A'}</p>
                 </div>
               </div>
               <div className={styles.infoItem}>
                 <span className={styles.infoIcon}><CalendarIcon /></span>
                 <div>
                   <p className={styles.infoLabel}>Fecha de Registro</p>
-                  <p className={styles.infoValue}>{formatearFecha(denuncia.fecha_registro)}</p>
+                  <p className={styles.infoValue}>{formatearFecha(denuncia?.fecha_registro)}</p>
                 </div>
               </div>
               <div className={styles.infoItem}>
                 <span className={styles.infoIcon}><RefreshIcon /></span>
                 <div>
                   <p className={styles.infoLabel}>Última Actualización</p>
-                  <p className={styles.infoValue}>{formatearFecha(denuncia.ultima_actualizacion)}</p>
+                  <p className={styles.infoValue}>{formatearFecha(denuncia?.ultima_actualizacion)}</p>
                 </div>
               </div>
               <div className={styles.infoItem}>
@@ -385,7 +396,7 @@ const SeguimientoDenunciaPage = () => {
                 <div>
                   <p className={styles.infoLabel}>Ubicación</p>
                   <p className={styles.infoValue}>
-                    {denuncia.direccion_geolocalizada || 'No especificada'}
+                    {denuncia?.direccion_geolocalizada || 'No especificada'}
                   </p>
                 </div>
               </div>
@@ -404,7 +415,7 @@ const SeguimientoDenunciaPage = () => {
                 const esUltimo = index === historial.length - 1;
 
                 return (
-                  <div key={item.id_historial} className={styles.timelineItem}>
+                  <div key={item.id_historial || `historial-${index}`} className={styles.timelineItem}>
                     <div className={styles.timelineMarker}>
                       <div
                         className={`${styles.timelineDot} ${esUltimo ? styles.timelineDotActive : ''}`}
@@ -476,7 +487,7 @@ const SeguimientoDenunciaPage = () => {
           </button>
         </div>
       </div>
-      {isMobile && <BottomNavigation userType="ciudadano" />}
+      {isMobile && <BottomNavigation userType={esAutoridad ? "autoridad" : "ciudadano"} />}
     </div>
   );
 };

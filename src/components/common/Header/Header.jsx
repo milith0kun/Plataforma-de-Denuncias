@@ -120,19 +120,38 @@ const Icons = {
  * y el rol del usuario (ciudadano, autoridad, admin)
  */
 const Header = ({ variant }) => {
-  const { usuario, logout, estaAutenticado, esAutoridad, esCiudadano, esAdmin } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [perfilMenuAbierto, setPerfilMenuAbierto] = useState(false);
   const dropdownRef = useRef(null);
 
+  // Usar useAuth de forma segura con manejo de errores
+  let authContext = null;
+  try {
+    authContext = useAuth();
+  } catch (error) {
+    // Si el contexto no está disponible, usar valores por defecto
+    console.warn('AuthContext no disponible en Header:', error);
+  }
+
+  const { 
+    usuario = null, 
+    logout = () => {}, 
+    estaAutenticado = false, 
+    esAutoridad = false, 
+    esCiudadano = false, 
+    esAdmin = false,
+    cargando = false
+  } = authContext || {};
+
   // Rutas públicas donde NO se debe mostrar el header autenticado
   const rutasPublicas = ['/', '/login', '/register', '/register-authority', '/forgot-password', '/reset-password'];
   const esRutaPublica = rutasPublicas.includes(location.pathname) || location.pathname.startsWith('/reset-password');
 
   // Determinar si mostrar header público o autenticado
-  const esPublico = variant === 'public' || !estaAutenticado || esRutaPublica;
+  // Si está cargando, mostrar header público para evitar errores
+  const esPublico = variant === 'public' || cargando || !estaAutenticado || esRutaPublica;
 
   // Obtener iniciales del usuario
   const obtenerIniciales = (nombres, apellidos) => {
@@ -159,7 +178,8 @@ const Header = ({ variant }) => {
         { path: '/home', label: 'Dashboard', icon: 'dashboard' },
         { path: '/denuncias', label: 'Mis Denuncias', icon: 'list' },
         { path: '/nueva-denuncia', label: 'Nueva Denuncia', icon: 'plus', primary: true },
-        { path: '/seguimiento', label: 'Seguimiento', icon: 'track' }
+        { path: '/seguimiento', label: 'Seguimiento', icon: 'track' },
+        { path: '/perfil', label: 'Mi Perfil', icon: 'user' }
       ];
     }
 

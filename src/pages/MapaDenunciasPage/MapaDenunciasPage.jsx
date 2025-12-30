@@ -7,6 +7,7 @@ import denunciaService from '../../services/denunciaService';
 import Header from '../../components/common/Header/Header';
 import BottomNavigation from '../../components/common/BottomNavigation/BottomNavigation';
 import { ArrowLeft, Filter } from 'lucide-react';
+import { useAuth } from '../../hooks/useAuth';
 import styles from './MapaDenunciasPage.module.css';
 
 // Configurar íconos de Leaflet
@@ -28,6 +29,7 @@ const MapaDenunciasPage = () => {
     const [filtroEstado, setFiltroEstado] = useState('todos');
     const [mostrarFiltros, setMostrarFiltros] = useState(false);
     const navigate = useNavigate();
+    const { esAutoridad } = useAuth();
 
     // Cusco, Perú como centro por defecto
     const defaultCenter = [-13.5319, -71.9675];
@@ -51,14 +53,18 @@ const MapaDenunciasPage = () => {
 
     const cargarDenuncias = async () => {
         try {
+            setLoading(true);
             const response = await denunciaService.obtenerDenuncias({
                 limite: 1000
             });
 
-            if (response.success) {
+            if (response.success && response.data) {
+                // Obtener denuncias del objeto de respuesta
+                const denunciasLista = response.data.denuncias || response.data || [];
+                
                 // Filtrar solo denuncias con coordenadas válidas
-                const denunciasConCoordenadas = response.data.denuncias.filter(
-                    d => d.latitud && d.longitud
+                const denunciasConCoordenadas = denunciasLista.filter(
+                    d => d.latitud && d.longitud && !isNaN(d.latitud) && !isNaN(d.longitud)
                 );
 
                 setDenuncias(denunciasConCoordenadas);
@@ -92,11 +98,24 @@ const MapaDenunciasPage = () => {
         });
     };
 
+    // Función auxiliar para obtener el nombre del estado
+    const obtenerNombreEstado = (denuncia) => {
+        if (denuncia.estado?.nombre) return denuncia.estado.nombre;
+        if (denuncia.estado_nombre) return denuncia.estado_nombre;
+        if (denuncia.id_estado_actual?.nombre) return denuncia.id_estado_actual.nombre;
+        return null;
+    };
+
+    // Filtrar denuncias por estado
     const denunciasFiltradas = filtroEstado === 'todos'
         ? denuncias
-        : denuncias.filter(d => d.estado?.nombre === filtroEstado);
+        : denuncias.filter(d => {
+            const estadoNombre = obtenerNombreEstado(d);
+            return estadoNombre === filtroEstado;
+        });
 
-    const estadosUnicos = [...new Set(denuncias.map(d => d.estado?.nombre))].filter(Boolean);
+    // Obtener estados únicos de las denuncias
+    const estadosUnicos = [...new Set(denuncias.map(d => obtenerNombreEstado(d)))].filter(Boolean);
 
     if (loading) {
         return (
@@ -108,7 +127,7 @@ const MapaDenunciasPage = () => {
                         <p>Cargando mapa de denuncias...</p>
                     </div>
                 </div>
-                <BottomNavigation userType="ciudadano" />
+                <BottomNavigation userType={esAutoridad ? "autoridad" : "ciudadano"} />
             </>
         );
     }
@@ -147,19 +166,23 @@ const MapaDenunciasPage = () => {
                             >
                                 Todas ({denuncias.length})
                             </button>
-                            {estadosUnicos.map(estado => (
-                                <button
-                                    key={estado}
-                                    className={`${styles.filtroChip} ${filtroEstado === estado ? styles.chipActivo : ''}`}
-                                    onClick={() => setFiltroEstado(estado)}
-                                    style={{
-                                        borderColor: filtroEstado === estado ? getMarkerColor(estado) : '#e5e7eb',
-                                        backgroundColor: filtroEstado === estado ? `${getMarkerColor(estado)}15` : 'white'
-                                    }}
-                                >
-                                    {estado} ({denuncias.filter(d => d.estado?.nombre === estado).length})
-                                </button>
-                            ))}
+                            {estadosUnicos.map(estado => {
+                                const count = denuncias.filter(d => obtenerNombreEstado(d) === estado).length;
+                                
+                                return (
+                                    <button
+                                        key={estado}
+                                        className={`${styles.filtroChip} ${filtroEstado === estado ? styles.chipActivo : ''}`}
+                                        onClick={() => setFiltroEstado(estado)}
+                                        style={{
+                                            borderColor: filtroEstado === estado ? getMarkerColor(estado) : '#e5e7eb',
+                                            backgroundColor: filtroEstado === estado ? `${getMarkerColor(estado)}15` : 'white'
+                                        }}
+                                    >
+                                        {estado} ({count})
+                                    </button>
+                                );
+                            })}
                         </div>
                     )}
                 </div>
@@ -176,43 +199,51 @@ const MapaDenunciasPage = () => {
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
 
-                        {denunciasFiltradas.map((denuncia) => (
-                            <Marker
-                                key={denuncia._id}
-                                position={[denuncia.latitud, denuncia.longitud]}
-                                icon={createCustomIcon(getMarkerColor(denuncia.estado?.nombre))}
-                            >
-                                <Popup className={styles.popup}>
-                                    <div className={styles.popupContent}>
-                                        <h3>{denuncia.titulo}</h3>
-                                        <p className={styles.categoria}>
-                                            <strong>Categoría:</strong> {denuncia.categoria?.nombre}
-                                        </p>
-                                        <p className={styles.estado}>
-                                            <span
-                                                className={styles.estadoBadge}
-                                                style={{ backgroundColor: getMarkerColor(denuncia.estado?.nombre) }}
+                        {denunciasFiltradas.map((denuncia) => {
+                            const estadoNombre = obtenerNombreEstado(denuncia) || 'Sin estado';
+                            const categoriaNombre = denuncia.categoria?.nombre || denuncia.categoria_nombre || denuncia.id_categoria?.nombre || 'Sin categoría';
+                            
+                            return (
+                                <Marker
+                                    key={denuncia._id || denuncia.id_denuncia}
+                                    position={[denuncia.latitud, denuncia.longitud]}
+                                    icon={createCustomIcon(getMarkerColor(estadoNombre))}
+                                >
+                                    <Popup className={styles.popup}>
+                                        <div className={styles.popupContent}>
+                                            <h3>{denuncia.titulo || 'Sin título'}</h3>
+                                            <p className={styles.categoria}>
+                                                <strong>Categoría:</strong> {categoriaNombre}
+                                            </p>
+                                            <p className={styles.estado}>
+                                                <span
+                                                    className={styles.estadoBadge}
+                                                    style={{ backgroundColor: getMarkerColor(estadoNombre) }}
+                                                >
+                                                    {estadoNombre}
+                                                </span>
+                                            </p>
+                                            <p className={styles.fecha}>
+                                                {denuncia.fecha_registro 
+                                                    ? new Date(denuncia.fecha_registro).toLocaleDateString('es-ES', {
+                                                        day: 'numeric',
+                                                        month: 'long',
+                                                        year: 'numeric'
+                                                    })
+                                                    : 'Fecha no disponible'
+                                                }
+                                            </p>
+                                            <button
+                                                className={styles.verDetalleBtn}
+                                                onClick={() => navigate(`/denuncias/${denuncia._id || denuncia.id_denuncia}`)}
                                             >
-                                                {denuncia.estado?.nombre}
-                                            </span>
-                                        </p>
-                                        <p className={styles.fecha}>
-                                            {new Date(denuncia.fecha_registro).toLocaleDateString('es-ES', {
-                                                day: 'numeric',
-                                                month: 'long',
-                                                year: 'numeric'
-                                            })}
-                                        </p>
-                                        <button
-                                            className={styles.verDetalleBtn}
-                                            onClick={() => navigate(`/denuncias/${denuncia._id}`)}
-                                        >
-                                            Ver Detalles
-                                        </button>
-                                    </div>
-                                </Popup>
-                            </Marker>
-                        ))}
+                                                Ver Detalles
+                                            </button>
+                                        </div>
+                                    </Popup>
+                                </Marker>
+                            );
+                        })}
                     </MapContainer>
                 </div>
 
@@ -238,7 +269,7 @@ const MapaDenunciasPage = () => {
                     </div>
                 </div>
             </div>
-            <BottomNavigation userType="ciudadano" />
+            <BottomNavigation userType={esAutoridad ? "autoridad" : "ciudadano"} />
         </>
     );
 };

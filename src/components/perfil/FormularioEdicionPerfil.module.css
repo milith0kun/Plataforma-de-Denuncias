@@ -67,6 +67,20 @@
   cursor: not-allowed;
 }
 
+.inputDisabled {
+  background-color: #f3f4f6 !important;
+  color: #6b7280 !important;
+  cursor: not-allowed !important;
+  border-color: #d1d5db !important;
+}
+
+.helpText {
+  color: #6b7280;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
 .inputError {
   border-color: #ef4444;
 }

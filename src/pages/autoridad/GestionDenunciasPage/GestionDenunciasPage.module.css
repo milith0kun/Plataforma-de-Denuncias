@@ -282,8 +282,43 @@
 }
 
 .denunciaCell {
-  max-width: 450px;
-  min-width: 300px;
+  max-width: 400px;
+  min-width: 250px;
+}
+
+.imageCell {
+  width: 80px;
+  max-width: 80px;
+}
+
+.thumbnailContainer {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--color-gray-100);
+  border: 1px solid var(--color-gray-200);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.thumbnailContainer:hover {
+  transform: scale(1.05);
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.noImage {
+  color: var(--color-gray-400);
 }
 
 .denunciaContent {

@@ -66,6 +66,27 @@ export const crearComentario = async (req, res) => {
       es_interno: esComentarioInterno
     });
 
+    // Si el comentario es público y lo hace una autoridad, notificar al ciudadano
+    if (!esComentarioInterno && tipoUsuario !== TIPOS_USUARIO.CIUDADANO) {
+      try {
+        const Notificacion = (await import('../models/Notificacion.js')).default;
+        const idCiudadano = denuncia.id_ciudadano_original || (denuncia.id_ciudadano?._id || denuncia.id_ciudadano);
+        
+        if (idCiudadano) {
+          await Notificacion.crear({
+            id_usuario: idCiudadano,
+            id_denuncia: id,
+            titulo: `Nuevo Comentario en tu Denuncia: ${denuncia.titulo}`,
+            mensaje: `Una autoridad ha agregado un comentario en tu denuncia: "${comentario.trim().substring(0, 100)}${comentario.trim().length > 100 ? '...' : ''}"`,
+            tipo: 'INFO'
+          });
+        }
+      } catch (notifError) {
+        // No lanzar error - el comentario ya se creó exitosamente
+        console.error('Error al crear notificación de comentario:', notifError);
+      }
+    }
+
     return res.status(201).json({
       success: true,
       message: 'Comentario creado exitosamente',

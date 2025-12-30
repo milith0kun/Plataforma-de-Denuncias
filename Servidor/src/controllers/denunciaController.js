@@ -2,6 +2,7 @@
  * Controlador para gestión de Denuncias
  */
 
+import mongoose from 'mongoose';
 import Denuncia from '../models/Denuncia.js';
 import Categoria from '../models/Categoria.js';
 import EstadoDenuncia from '../models/EstadoDenuncia.js';
@@ -154,7 +155,10 @@ class DenunciaController {
 
       // Si es ciudadano, solo puede ver sus propias denuncias
       if (id_tipo_usuario === 1) {
-        filtros.id_ciudadano = id_usuario;
+        // Asegurar que id_usuario sea un ObjectId válido
+        filtros.id_ciudadano = mongoose.Types.ObjectId.isValid(id_usuario) 
+          ? new mongoose.Types.ObjectId(id_usuario) 
+          : id_usuario;
       }
 
       const paginacion = {
@@ -344,15 +348,16 @@ class DenunciaController {
       }
 
       // Validar transición de estado
+      const estadoActualId = denuncia.id_estado_actual?._id || denuncia.id_estado_actual;
       const transicionValida = await EstadoDenuncia.esTransicionValida(
-        denuncia.id_estado_actual,
+        estadoActualId,
         id_estado_nuevo
       );
 
       if (!transicionValida) {
         return res.status(400).json({
           success: false,
-          message: 'Transición de estado no permitida'
+          message: 'Transición de estado no permitida o estados no válidos'
         });
       }
 
@@ -371,12 +376,32 @@ class DenunciaController {
         // Importar Notificacion dinámicamente o usar si se importó arriba
         const Notificacion = (await import('../models/Notificacion.js')).default;
 
+        // Determinar el tipo de notificación según el estado
+        const estadoNombre = nuevoEstado.nombre?.toLowerCase() || '';
+        let tipoNotificacion = 'INFO';
+        let mensajeNotificacion = `El estado de tu denuncia ha cambiado a: ${nuevoEstado.nombre}.`;
+
+        if (estadoNombre.includes('resuelta') || estadoNombre.includes('cerrada')) {
+          tipoNotificacion = 'SUCCESS';
+          mensajeNotificacion = `¡Excelente noticia! Tu denuncia "${denuncia.titulo}" ha sido ${nuevoEstado.nombre.toLowerCase()}.`;
+        } else if (estadoNombre.includes('rechazada')) {
+          tipoNotificacion = 'WARNING';
+          mensajeNotificacion = `Tu denuncia "${denuncia.titulo}" ha sido ${nuevoEstado.nombre.toLowerCase()}.`;
+        } else if (estadoNombre.includes('en proceso') || estadoNombre.includes('asignada')) {
+          tipoNotificacion = 'INFO';
+          mensajeNotificacion = `Tu denuncia "${denuncia.titulo}" está ahora ${nuevoEstado.nombre.toLowerCase()}.`;
+        }
+
+        if (comentario) {
+          mensajeNotificacion += ` Comentario: ${comentario}`;
+        }
+
         await Notificacion.crear({
           id_usuario: idCiudadano,
           id_denuncia: id,
           titulo: `Actualización de Denuncia: ${denuncia.titulo}`,
-          mensaje: `El estado de tu denuncia ha cambiado a: ${nuevoEstado.nombre}. ${comentario ? `Comentario: ${comentario}` : ''}`,
-          tipo: 'INFO'
+          mensaje: mensajeNotificacion,
+          tipo: tipoNotificacion
         });
       }
 

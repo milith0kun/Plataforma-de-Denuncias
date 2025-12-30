@@ -14,7 +14,19 @@ import Header from '../../../components/common/Header/Header';
 import BottomNavigation from '../../../components/common/BottomNavigation/BottomNavigation';
 import denunciaService from '../../../services/denunciaService';
 import estadisticasService from '../../../services/estadisticasService';
+import { BASE_URL } from '../../../services/api';
 import styles from './DashboardAutoridadPageNew.module.css';
+
+// Función para obtener URL de imagen
+const obtenerUrlImagen = (evidencias) => {
+  if (!evidencias || evidencias.length === 0) return null;
+  const foto = evidencias[0];
+  if (!foto || !foto.url_archivo) return null;
+
+  const url = foto.url_archivo;
+  if (url.startsWith('http')) return url;
+  return `${BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+};
 
 const DashboardAutoridadPage = () => {
   const { usuario } = useAuth();
@@ -305,6 +317,7 @@ const DashboardAutoridadPage = () => {
                 <table className={styles.table}>
                   <thead>
                     <tr>
+                      <th>Imagen</th>
                       <th>Título</th>
                       <th>Categoría</th>
                       <th>Estado</th>
@@ -315,6 +328,21 @@ const DashboardAutoridadPage = () => {
                   <tbody>
                     {denunciasRecientes.map((denuncia) => (
                       <tr key={denuncia.id_denuncia}>
+                        <td>
+                          <div className={styles.thumbnailContainer} onClick={() => navigate(`/denuncias/${denuncia.id_denuncia}`)}>
+                            {obtenerUrlImagen(denuncia.evidencias) ? (
+                              <img
+                                src={obtenerUrlImagen(denuncia.evidencias)}
+                                alt={denuncia.titulo}
+                                className={styles.thumbnail}
+                              />
+                            ) : (
+                              <div className={styles.noImage}>
+                                <FileText size={20} />
+                              </div>
+                            )}
+                          </div>
+                        </td>
                         <td>
                           <div className={styles.cellContent}>
                             <strong>{denuncia.titulo}</strong>

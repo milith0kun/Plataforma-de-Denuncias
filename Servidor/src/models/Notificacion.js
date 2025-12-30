@@ -46,7 +46,21 @@ notificacionSchema.index({ fecha_creacion: -1 });
 // Métodos estáticos
 notificacionSchema.statics.crear = async function (datos) {
     try {
-        const notificacion = await this.create(datos);
+        // Convertir id_usuario a ObjectId si es necesario
+        const datosNormalizados = { ...datos };
+        if (datosNormalizados.id_usuario) {
+            datosNormalizados.id_usuario = mongoose.Types.ObjectId.isValid(datosNormalizados.id_usuario)
+                ? new mongoose.Types.ObjectId(datosNormalizados.id_usuario)
+                : datosNormalizados.id_usuario;
+        }
+        // Convertir id_denuncia a ObjectId si es necesario y existe
+        if (datosNormalizados.id_denuncia) {
+            datosNormalizados.id_denuncia = mongoose.Types.ObjectId.isValid(datosNormalizados.id_denuncia)
+                ? new mongoose.Types.ObjectId(datosNormalizados.id_denuncia)
+                : datosNormalizados.id_denuncia;
+        }
+        
+        const notificacion = await this.create(datosNormalizados);
         return notificacion;
     } catch (error) {
         console.error('Error al crear notificación:', error);
@@ -56,7 +70,12 @@ notificacionSchema.statics.crear = async function (datos) {
 
 notificacionSchema.statics.obtenerPorUsuario = async function (id_usuario, soloNoLeidas = false, limite = 20) {
     try {
-        const query = { id_usuario };
+        // Convertir id_usuario a ObjectId si es necesario
+        const usuarioId = mongoose.Types.ObjectId.isValid(id_usuario) 
+            ? new mongoose.Types.ObjectId(id_usuario) 
+            : id_usuario;
+
+        const query = { id_usuario: usuarioId };
         if (soloNoLeidas) {
             query.leida = false;
         }
@@ -74,8 +93,16 @@ notificacionSchema.statics.obtenerPorUsuario = async function (id_usuario, soloN
 
 notificacionSchema.statics.marcarComoLeida = async function (id_notificacion, id_usuario) {
     try {
+        // Convertir ids a ObjectId si es necesario
+        const notificacionId = mongoose.Types.ObjectId.isValid(id_notificacion) 
+            ? new mongoose.Types.ObjectId(id_notificacion) 
+            : id_notificacion;
+        const usuarioId = mongoose.Types.ObjectId.isValid(id_usuario) 
+            ? new mongoose.Types.ObjectId(id_usuario) 
+            : id_usuario;
+
         const notificacion = await this.findOneAndUpdate(
-            { _id: id_notificacion, id_usuario },
+            { _id: notificacionId, id_usuario: usuarioId },
             { leida: true },
             { new: true }
         );
@@ -88,8 +115,13 @@ notificacionSchema.statics.marcarComoLeida = async function (id_notificacion, id
 
 notificacionSchema.statics.marcarTodasComoLeidas = async function (id_usuario) {
     try {
+        // Convertir id_usuario a ObjectId si es necesario
+        const usuarioId = mongoose.Types.ObjectId.isValid(id_usuario) 
+            ? new mongoose.Types.ObjectId(id_usuario) 
+            : id_usuario;
+
         const resultado = await this.updateMany(
-            { id_usuario, leida: false },
+            { id_usuario: usuarioId, leida: false },
             { leida: true }
         );
         return resultado.modifiedCount;

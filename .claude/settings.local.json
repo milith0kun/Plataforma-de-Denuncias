@@ -18,7 +18,8 @@
       "Bash(taskkill:*)",
       "Bash(npm run dev)",
       "Bash(netstat:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(node scripts/limpiar-base-datos.js:*)"
     ],
     "deny": [],
     "ask": []

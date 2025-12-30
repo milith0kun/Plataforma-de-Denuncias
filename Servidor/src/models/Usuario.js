@@ -168,12 +168,25 @@ usuarioSchema.statics.documentoExisteParaOtroUsuario = async function (documento
   return count > 0;
 };
 
+usuarioSchema.statics.numeroEmpleadoExisteParaOtroUsuario = async function (numero_empleado, id_usuario) {
+  const count = await this.countDocuments({
+    numero_empleado,
+    _id: { $ne: id_usuario }
+  });
+  return count > 0;
+};
+
 usuarioSchema.statics.actualizar = async function (id_usuario, datosActualizacion) {
   return await this.findByIdAndUpdate(id_usuario, datosActualizacion, { new: true });
 };
 
 usuarioSchema.statics.cambiarPassword = async function (id_usuario, nuevoPasswordHash) {
   return await this.findByIdAndUpdate(id_usuario, { password_hash: nuevoPasswordHash }, { new: true });
+};
+
+usuarioSchema.statics.verificarPassword = async function (id_usuario) {
+  const usuario = await this.findById(id_usuario).select('password_hash');
+  return usuario ? usuario.password_hash : null;
 };
 
 // Método para obtener historial de actividad del usuario

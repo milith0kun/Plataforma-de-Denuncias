@@ -44,13 +44,12 @@ function MapaPicker({ ubicacion, onChange, zoom = 13, className = '' }) {
     }
   }, [ubicacion]);
 
-  // Obtener ubicación automáticamente al montar el componente
-  useEffect(() => {
-    // Solo obtener ubicación si no se pasó una ubicación inicial y aún no se ha obtenido
-    if (!ubicacion && !ubicacionObtenida) {
-      obtenerUbicacionActual();
-    }
-  }, []);
+  // No obtener ubicación automáticamente - el usuario debe hacer clic en el botón
+  // useEffect(() => {
+  //   if (!ubicacion && !ubicacionObtenida) {
+  //     obtenerUbicacionActual();
+  //   }
+  // }, []);
 
   // Obtener ubicación actual del usuario
   const obtenerUbicacionActual = () => {
@@ -81,17 +80,19 @@ function MapaPicker({ ubicacion, onChange, zoom = 13, className = '' }) {
         }
       },
       (error) => {
-        let mensaje = 'Error al obtener ubicación';
+        let mensaje = '';
         switch (error.code) {
           case error.PERMISSION_DENIED:
-            mensaje = 'Permiso de ubicación denegado. Puedes hacer clic en "Mi ubicación" o seleccionar manualmente en el mapa.';
+            mensaje = 'Para usar tu ubicación actual, activa los permisos de ubicación en tu navegador. También puedes hacer clic en el mapa para seleccionar manualmente.';
             break;
           case error.POSITION_UNAVAILABLE:
-            mensaje = 'Información de ubicación no disponible. Puedes seleccionar manualmente en el mapa.';
+            mensaje = 'No se pudo determinar tu ubicación. Puedes seleccionar manualmente haciendo clic en el mapa.';
             break;
           case error.TIMEOUT:
-            mensaje = 'Tiempo de espera agotado. Puedes hacer clic en "Mi ubicación" para intentar de nuevo.';
+            mensaje = 'La búsqueda de ubicación tardó demasiado. Intenta de nuevo o selecciona manualmente en el mapa.';
             break;
+          default:
+            mensaje = 'No se pudo obtener tu ubicación. Puedes seleccionar manualmente haciendo clic en el mapa.';
         }
         setErrorUbicacion(mensaje);
         setObteniendo(false);
@@ -137,8 +138,13 @@ function MapaPicker({ ubicacion, onChange, zoom = 13, className = '' }) {
       </div>
 
       {errorUbicacion && (
-        <div className={styles.error}>
-          {errorUbicacion}
+        <div className={styles.warning}>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span>{errorUbicacion}</span>
         </div>
       )}
 

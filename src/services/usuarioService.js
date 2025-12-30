@@ -217,9 +217,38 @@ class UsuarioService {
    * @returns {Object} Datos formateados
    */
   static formatearDatosUsuario(usuario) {
+    if (!usuario) {
+      return {
+        nombres: '',
+        apellidos: '',
+        email: '',
+        telefono: '',
+        direccion: '',
+        numero_documento: '',
+        cargo: '',
+        area_responsabilidad: '',
+        numero_empleado: ''
+      };
+    }
+
     return {
       ...usuario,
-      nombre_completo: `${usuario.nombres} ${usuario.apellidos}`,
+      // Mapear campos del backend al frontend (mantener ambos nombres para compatibilidad)
+      direccion: usuario.direccion_registro || usuario.direccion || '',
+      direccion_registro: usuario.direccion_registro || usuario.direccion || '',
+      numero_documento: usuario.documento_identidad || usuario.numero_documento || '',
+      documento_identidad: usuario.documento_identidad || usuario.numero_documento || '',
+      // Campos de autoridad (asegurar que siempre existan)
+      cargo: usuario.cargo || '',
+      area_responsabilidad: usuario.area_responsabilidad || '',
+      numero_empleado: usuario.numero_empleado || '',
+      // Campos comunes (asegurar que siempre existan)
+      nombres: usuario.nombres || '',
+      apellidos: usuario.apellidos || '',
+      email: usuario.email || '',
+      telefono: usuario.telefono || '',
+      // Campos formateados
+      nombre_completo: `${usuario.nombres || ''} ${usuario.apellidos || ''}`.trim(),
       telefono_formateado: usuario.telefono ? this.formatearTelefono(usuario.telefono) : null,
       fecha_registro_formateada: usuario.fecha_registro ? 
         new Date(usuario.fecha_registro).toLocaleDateString('es-CO') : null

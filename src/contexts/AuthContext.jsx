@@ -120,6 +120,15 @@ export const AuthProvider = ({ children }) => {
     setError(null);
   };
 
+  // Actualizar datos del usuario en el contexto
+  const actualizarUsuario = (datosUsuario) => {
+    setUsuario(datosUsuario);
+    // Actualizar también en localStorage
+    if (datosUsuario) {
+      localStorage.setItem('usuario', JSON.stringify(datosUsuario));
+    }
+  };
+
   // Helpers para detectar tipo de usuario de forma robusta
   const esUsuarioAutoridad = (user) => {
     if (!user) return false;
@@ -151,6 +160,7 @@ export const AuthProvider = ({ children }) => {
     solicitarRecuperacion,
     restablecerPassword,
     limpiarError,
+    actualizarUsuario,
     estaAutenticado: !!usuario || !!localStorage.getItem('token'),
     esAdmin: esUsuarioAdmin(usuario),
     esAutoridad: esUsuarioAutoridad(usuario),

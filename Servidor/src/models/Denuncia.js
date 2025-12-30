@@ -223,7 +223,10 @@ denunciaSchema.statics.obtenerConFiltros = async function (filtros = {}, paginac
     const query = {};
 
     if (id_ciudadano) {
-      query.id_ciudadano = id_ciudadano;
+      // Asegurar que id_ciudadano sea un ObjectId válido
+      query.id_ciudadano = mongoose.Types.ObjectId.isValid(id_ciudadano) 
+        ? new mongoose.Types.ObjectId(id_ciudadano) 
+        : id_ciudadano;
     }
 
     if (id_categoria) {
@@ -262,39 +265,92 @@ denunciaSchema.statics.obtenerConFiltros = async function (filtros = {}, paginac
     const ordenFinal = ordenValidos.includes(orden) ? orden : 'fecha_registro';
     const direccionFinal = direccion.toUpperCase() === 'ASC' ? 1 : -1;
 
-    // Obtener denuncias
-    let denuncias = await this.find(query)
-      .populate('id_categoria', 'nombre')
-      .populate('id_estado_actual', 'nombre')
-      .populate('id_ciudadano', 'nombres apellidos')
-      .sort({ [ordenFinal]: direccionFinal })
-      .skip(offset)
-      .limit(parseInt(limite))
-      .lean();
+    // Obtener denuncias con evidencias usando aggregate para mayor eficiencia
+    const pipeline = [
+      { $match: query },
+      { $sort: { [ordenFinal]: direccionFinal } },
+      { $skip: offset },
+      { $limit: parseInt(limite) },
+      // Lookup para traer las evidencias
+      {
+        $lookup: {
+          from: 'evidencias_foto',
+          localField: '_id',
+          foreignField: 'id_denuncia',
+          as: 'evidencias'
+        }
+      },
+      // Lookup para categoría
+      {
+        $lookup: {
+          from: 'categorias',
+          localField: 'id_categoria',
+          foreignField: '_id',
+          as: 'categoria_data'
+        }
+      },
+      // Lookup para estado
+      {
+        $lookup: {
+          from: 'estados_denuncia',
+          localField: 'id_estado_actual',
+          foreignField: '_id',
+          as: 'estado_data'
+        }
+      },
+      // Lookup para ciudadano
+      {
+        $lookup: {
+          from: 'usuarios',
+          localField: 'id_ciudadano',
+          foreignField: '_id',
+          as: 'ciudadano_data'
+        }
+      }
+    ];
+
+    let denuncias = await this.aggregate(pipeline);
 
     // Procesar denuncias para compatibilidad
     denuncias = denuncias.map(denuncia => {
-      // Agregar id_denuncia (no se incluye con .lean())
       denuncia.id_denuncia = denuncia._id;
+
+      // Extraer datos de los lookups
+      const categoria = denuncia.categoria_data?.[0];
+      const estado = denuncia.estado_data?.[0];
+      const ciudadano = denuncia.ciudadano_data?.[0];
 
       if (denuncia.es_anonima) {
         denuncia.id_ciudadano = {
           nombres: 'Anónimo',
           apellidos: ''
         };
+      } else if (ciudadano) {
+        denuncia.id_ciudadano = {
+          _id: ciudadano._id,
+          nombres: ciudadano.nombres,
+          apellidos: ciudadano.apellidos
+        };
       }
 
-      // Renombrar campos
-      if (denuncia.id_categoria) {
-        denuncia.categoria_nombre = denuncia.id_categoria.nombre;
+      // Renombrar campos para compatibilidad con el frontend
+      if (categoria) {
+        denuncia.categoria_nombre = categoria.nombre;
+        denuncia.id_categoria = categoria;
       }
-      if (denuncia.id_estado_actual) {
-        denuncia.estado_nombre = denuncia.id_estado_actual.nombre;
+      if (estado) {
+        denuncia.estado_nombre = estado.nombre;
+        denuncia.id_estado_actual = estado;
       }
       if (denuncia.id_ciudadano) {
         denuncia.ciudadano_nombres = denuncia.id_ciudadano.nombres;
         denuncia.ciudadano_apellidos = denuncia.id_ciudadano.apellidos;
       }
+
+      // Limpiar campos temporales del lookup
+      delete denuncia.categoria_data;
+      delete denuncia.estado_data;
+      delete denuncia.ciudadano_data;
 
       return denuncia;
     });

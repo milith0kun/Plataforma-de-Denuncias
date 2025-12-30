@@ -221,6 +221,7 @@ const PerfilPage = () => {
                   datosIniciales={perfilData}
                   onActualizar={manejarActualizacionPerfil}
                   loading={loading}
+                  esAutoridad={esAutoridad}
                 />
               )}
             </div>

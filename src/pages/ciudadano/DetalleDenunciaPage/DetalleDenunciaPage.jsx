@@ -18,7 +18,7 @@ const DetalleDenunciaPage = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const isMobile = useIsMobile();
-  const { user } = useAuth();
+  const { esAutoridad } = useAuth();
 
   const [denuncia, setDenuncia] = useState(null);
   const [historialEstados, setHistorialEstados] = useState([]);
@@ -27,21 +27,32 @@ const DetalleDenunciaPage = () => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
-  // Estados para panel de autoridad
-  const [estados, setEstados] = useState([]);
+  // Estados para panel de autoridad - siempre inicializar como array
+  const [estados, setEstados] = useState(() => []);
   const [modalCambiarEstado, setModalCambiarEstado] = useState(false);
   const [estadoSeleccionado, setEstadoSeleccionado] = useState('');
   const [comentarioEstado, setComentarioEstado] = useState('');
   const [procesandoCambio, setProcesandoCambio] = useState(false);
 
-  const esAutoridad = user?.id_tipo_usuario === 2;
+  // esAutoridad se obtiene directamente del hook useAuth
 
   useEffect(() => {
     cargarDenuncia();
     if (esAutoridad) {
       cargarEstados();
+    } else {
+      // Si no es autoridad, asegurar que estados sea un array vacío
+      setEstados([]);
     }
-  }, [id]);
+  }, [id, esAutoridad]);
+  
+  // Validación adicional: asegurar que estados siempre sea un array
+  useEffect(() => {
+    if (!Array.isArray(estados)) {
+      console.warn('estados no es un array, corrigiendo...', estados);
+      setEstados([]);
+    }
+  }, [estados]);
 
   const cargarDenuncia = async () => {
     try {
@@ -77,11 +88,35 @@ const DetalleDenunciaPage = () => {
   const cargarEstados = async () => {
     try {
       const response = await denunciaService.obtenerEstados();
-      if (response.success) {
-        setEstados(response.data || []);
+      
+      // Asegurar que siempre establezcamos un array
+      let estadosArray = [];
+      
+      if (response && response.success) {
+        // El backend devuelve { data: { estados: [...] } }
+        const dataEstados = response.data?.estados || response.data;
+        
+        // Verificar si es un array
+        if (Array.isArray(dataEstados)) {
+          estadosArray = dataEstados;
+        } else if (dataEstados && typeof dataEstados === 'object') {
+          // Si es un objeto, intentar convertirlo a array
+          estadosArray = Object.values(dataEstados).filter(item => item && typeof item === 'object');
+        }
+        
+        // Formatear estados y agregar id_estado si no existe
+        estadosArray = estadosArray.map(estado => ({
+          ...estado,
+          id_estado: estado.id_estado || estado._id || estado.id
+        }));
       }
+      
+      // Asegurar que siempre sea un array válido
+      setEstados(Array.isArray(estadosArray) ? estadosArray : []);
     } catch (err) {
       console.error('Error al cargar estados:', err);
+      // Asegurar que siempre sea un array, incluso en caso de error
+      setEstados([]);
     }
   };
 
@@ -97,7 +132,7 @@ const DetalleDenunciaPage = () => {
       setProcesandoCambio(true);
       const response = await denunciaService.cambiarEstado(
         id,
-        parseInt(estadoSeleccionado),
+        estadoSeleccionado,
         comentarioEstado
       );
 
@@ -178,7 +213,7 @@ const DetalleDenunciaPage = () => {
           </div>
           <CardSkeleton count={3} />
         </div>
-        {isMobile && <BottomNavigation userType="ciudadano" />}
+        {isMobile && <BottomNavigation userType={esAutoridad ? "autoridad" : "ciudadano"} />}
       </div>
     );
   }
@@ -197,7 +232,7 @@ const DetalleDenunciaPage = () => {
             </button>
           </div>
         </div>
-        {isMobile && <BottomNavigation userType="ciudadano" />}
+        {isMobile && <BottomNavigation userType={esAutoridad ? "autoridad" : "ciudadano"} />}
       </div>
     );
   }
@@ -522,15 +557,30 @@ const DetalleDenunciaPage = () => {
                   required
                 >
                   <option value="">Selecciona un estado</option>
-                  {estados.map((estado) => (
-                    <option
-                      key={estado.id_estado}
-                      value={estado.id_estado}
-                      disabled={estado.id_estado === denuncia.id_estado_actual}
-                    >
-                      {estado.nombre} {estado.id_estado === denuncia.id_estado_actual ? '(actual)' : ''}
-                    </option>
-                  ))}
+                  {(() => {
+                    // Validación adicional para asegurar que estados sea un array
+                    const estadosValidos = Array.isArray(estados) ? estados : [];
+                    
+                    if (estadosValidos.length === 0) {
+                      return <option value="" disabled>No hay estados disponibles</option>;
+                    }
+                    
+                    return estadosValidos.map((estado) => {
+                      const estadoId = estado?.id_estado || estado?._id || estado?.id;
+                      const currentStateId = denuncia?.id_estado_actual?._id || denuncia?.id_estado_actual;
+                      const isCurrent = estadoId?.toString() === currentStateId?.toString();
+                      
+                      return (
+                        <option
+                          key={estadoId || Math.random()}
+                          value={estadoId}
+                          disabled={isCurrent}
+                        >
+                          {estado?.nombre || 'Sin nombre'} {isCurrent ? '(actual)' : ''}
+                        </option>
+                      );
+                    });
+                  })()}
                 </select>
               </div>
 
@@ -573,7 +623,7 @@ const DetalleDenunciaPage = () => {
         </div>
       )}
 
-      {isMobile && <BottomNavigation userType={user?.id_tipo_usuario === 2 ? "autoridad" : "ciudadano"} />}
+      {isMobile && <BottomNavigation userType={esAutoridad ? "autoridad" : "ciudadano"} />}
     </div>
   );
 };

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../../components/common/Header/Header';
 import BottomNavigation from '../../../components/common/BottomNavigation/BottomNavigation';
+import { useAuth } from '../../../hooks/useAuth';
 import { useIsMobile } from '../../../hooks/useIsMobile';
+import { useToast } from '../../../components/common/ToastContainer/ToastContainer';
 import UploadFotos from '../../../components/denuncias/UploadFotos';
 import MapaPicker from '../../../components/denuncias/MapaPicker';
 import denunciaService from '../../../services/denunciaService';
@@ -11,6 +13,8 @@ import styles from './NuevaDenunciaPage.module.css';
 const NuevaDenunciaPage = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const toast = useToast();
+  const { esAutoridad } = useAuth();
 
   // Estado del formulario
   const [formData, setFormData] = useState({
@@ -140,20 +144,23 @@ const NuevaDenunciaPage = () => {
           } catch (errorFotos) {
             console.error('Error al subir fotos:', errorFotos);
             // La denuncia ya fue creada, solo mostramos advertencia
-            alert('⚠️ Denuncia creada, pero hubo un error al subir las fotos');
+            toast.warning('Denuncia creada, pero hubo un error al subir las fotos');
           }
         } else if (fotos.length > 0 && !id_denuncia) {
           console.error('No se pudo obtener el ID de la denuncia para subir las fotos.');
-          alert('⚠️ Denuncia creada, pero no se pudo obtener el ID para las fotos.');
+          toast.warning('Denuncia creada, pero no se pudo obtener el ID para las fotos');
         }
 
-        alert('✅ Denuncia creada exitosamente');
-        navigate('/denuncias');
+        toast.success('Denuncia creada exitosamente');
+        // Esperar un momento para que se vea el toast antes de navegar
+        setTimeout(() => {
+          navigate('/denuncias');
+        }, 1500);
       }
     } catch (error) {
       console.error('Error al enviar denuncia:', error);
       const mensajeError = error.message || 'Error al enviar la denuncia. Inténtalo de nuevo.';
-      alert('❌ ' + mensajeError);
+      toast.error(mensajeError);
     } finally {
       setEnviando(false);
     }
@@ -333,7 +340,7 @@ const NuevaDenunciaPage = () => {
           </div>
         </form>
       </div>
-      {isMobile && <BottomNavigation userType="ciudadano" />}
+      {isMobile && <BottomNavigation userType={esAutoridad ? "autoridad" : "ciudadano"} />}
     </div>
   );
 };

@@ -449,33 +449,31 @@
 .cta-section {
   background-image: url('/Imagenes/BAsefooter.webp');
   background-size: cover;
-  background-position: top;
+  background-position: center;
   background-repeat: no-repeat;
-  color: var(--color-white);
   padding: var(--spacing-xl) 0;
   text-align: center;
   position: relative;
+  /* Gradiente sutil en lugar de overlay oscuro */
+  background: 
+    linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%),
+    url('/Imagenes/BAsefooter.webp');
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: overlay;
 }
 
+/* Quitar el overlay oscuro completamente */
 .cta-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 1;
+  display: none;
 }
 
 .cta-content {
   position: relative;
   z-index: 2;
-}
-
-.cta-content {
   max-width: 800px;
   margin: 0 auto;
+  padding: 0 var(--spacing-lg);
 }
 
 .cta-title {
@@ -483,14 +481,16 @@
   font-size: var(--font-size-h2);
   font-weight: var(--font-weight-bold);
   margin-bottom: var(--spacing-md);
-  color: #000000;
+  color: #1e293b;
+  text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
 }
 
 .cta-subtitle {
   font-size: var(--font-size-lg);
-  opacity: 0.9;
+  color: #475569;
   margin-bottom: var(--spacing-xl);
   line-height: 1.6;
+  font-weight: var(--font-weight-medium);
 }
 
 .cta-buttons {
@@ -500,16 +500,17 @@
   flex-wrap: wrap;
 }
 
-/* Estilos específicos para botones en CTA con imagen de fondo */
+/* Estilos específicos para botones en CTA mejorados */
 .cta-section .primary-button {
   background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: var(--color-white);
   border: 2px solid transparent;
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
   font-weight: var(--font-weight-bold);
   padding: 1rem 2.5rem;
   font-size: 1.125rem;
   transition: all 0.3s ease;
+  border-radius: var(--border-radius-md);
 }
 
 .cta-section .primary-button:hover {
@@ -521,22 +522,23 @@
 }
 
 .cta-section .secondary-button {
-  background: rgba(255, 255, 255, 0.95);
-  color: var(--color-primary);
-  border: 2px solid rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+  background: var(--color-white);
+  color: #3b82f6;
+  border: 2px solid #3b82f6;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
   font-weight: var(--font-weight-bold);
   padding: 1rem 2.5rem;
   font-size: 1.125rem;
   transition: all 0.3s ease;
+  border-radius: var(--border-radius-md);
 }
 
 .cta-section .secondary-button:hover {
-  background: var(--color-white);
-  color: #1d4ed8;
+  background: #3b82f6;
+  color: var(--color-white);
+  border-color: #3b82f6;
   transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
 }
 
 /* FOOTER - ESPECÍFICO DE LANDING PAGE */

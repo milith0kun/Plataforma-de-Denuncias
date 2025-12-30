@@ -14,7 +14,7 @@ import styles from './HomePageNew.module.css';
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const { usuario } = useAuth();
+  const { usuario, esAutoridad } = useAuth();
   const isMobile = useIsMobile();
 
   // Inicializar el sidebar solo para desktop
@@ -342,7 +342,7 @@ const HomePage = () => {
       </div>
 
       {/* Navegación inferior para móviles */}
-      {isMobile && <BottomNavigation userType="ciudadano" />}
+      {isMobile && <BottomNavigation userType={esAutoridad ? "autoridad" : "ciudadano"} />}
     </>
   );
 };

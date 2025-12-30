@@ -6,14 +6,17 @@ import Button from '../common/Button/Button';
  * Componente para editar el perfil del usuario
  * Permite actualizar información personal como nombres, apellidos, teléfono, etc.
  */
-const FormularioEdicionPerfil = ({ datosIniciales, onActualizar, loading }) => {
+const FormularioEdicionPerfil = ({ datosIniciales, onActualizar, loading, esAutoridad = false }) => {
   const [formData, setFormData] = useState({
     nombres: '',
     apellidos: '',
     email: '',
     telefono: '',
     direccion: '',
-    numero_documento: ''
+    numero_documento: '',
+    cargo: '',
+    area_responsabilidad: '',
+    numero_empleado: ''
   });
   
   const [errors, setErrors] = useState({});
@@ -23,14 +26,20 @@ const FormularioEdicionPerfil = ({ datosIniciales, onActualizar, loading }) => {
   // Inicializar formulario con datos del usuario
   useEffect(() => {
     if (datosIniciales) {
-      setFormData({
+      console.log('Datos iniciales recibidos en FormularioEdicionPerfil:', datosIniciales);
+      const nuevosDatos = {
         nombres: datosIniciales.nombres || '',
         apellidos: datosIniciales.apellidos || '',
         email: datosIniciales.email || '',
         telefono: datosIniciales.telefono || '',
-        direccion: datosIniciales.direccion || '',
-        numero_documento: datosIniciales.numero_documento || ''
-      });
+        direccion: datosIniciales.direccion || datosIniciales.direccion_registro || '',
+        numero_documento: datosIniciales.numero_documento || datosIniciales.documento_identidad || '',
+        cargo: datosIniciales.cargo || '',
+        area_responsabilidad: datosIniciales.area_responsabilidad || '',
+        numero_empleado: datosIniciales.numero_empleado || ''
+      };
+      console.log('Datos formateados para el formulario:', nuevosDatos);
+      setFormData(nuevosDatos);
     }
   }, [datosIniciales]);
 
@@ -133,13 +142,26 @@ const FormularioEdicionPerfil = ({ datosIniciales, onActualizar, loading }) => {
     
     try {
       // Preparar datos para envío (solo campos modificados)
+      // Mapear campos del frontend al backend
+      // NO incluir email ni numero_documento ya que son de solo lectura
+      const camposNoEditables = ['email', 'numero_documento'];
       const datosParaActualizar = {};
       Object.keys(formData).forEach(key => {
+        // Saltar campos no editables
+        if (camposNoEditables.includes(key)) {
+          return;
+        }
+        
         const newValue = formData[key].trim();
         const originalValue = (datosIniciales[key] || '').trim();
         
         if (newValue !== originalValue) {
-          datosParaActualizar[key] = newValue || null;
+          // Mapear nombres de campos del frontend al backend
+          if (key === 'direccion') {
+            datosParaActualizar.direccion_registro = newValue || null;
+          } else {
+            datosParaActualizar[key] = newValue || null;
+          }
         }
       });
 
@@ -164,7 +186,10 @@ const FormularioEdicionPerfil = ({ datosIniciales, onActualizar, loading }) => {
         email: datosIniciales.email || '',
         telefono: datosIniciales.telefono || '',
         direccion: datosIniciales.direccion || '',
-        numero_documento: datosIniciales.numero_documento || ''
+        numero_documento: datosIniciales.numero_documento || '',
+        cargo: datosIniciales.cargo || '',
+        area_responsabilidad: datosIniciales.area_responsabilidad || '',
+        numero_empleado: datosIniciales.numero_empleado || ''
       });
       setErrors({});
       setHasChanges(false);
@@ -217,7 +242,7 @@ const FormularioEdicionPerfil = ({ datosIniciales, onActualizar, loading }) => {
             )}
           </div>
 
-          {/* Email */}
+          {/* Email - Solo lectura */}
           <div className={styles.formGroup}>
             <label htmlFor="email" className={styles.label}>
               Correo Electrónico
@@ -227,14 +252,12 @@ const FormularioEdicionPerfil = ({ datosIniciales, onActualizar, loading }) => {
               id="email"
               name="email"
               value={formData.email}
-              onChange={handleInputChange}
-              className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
+              className={`${styles.input} ${styles.inputDisabled}`}
               placeholder="correo@ejemplo.com"
-              disabled={isSubmitting || loading}
+              disabled={true}
+              readOnly
             />
-            {errors.email && (
-              <span className={styles.errorMessage}>{errors.email}</span>
-            )}
+            <span className={styles.helpText}>El correo electrónico no se puede modificar</span>
           </div>
 
           {/* Teléfono */}
@@ -258,7 +281,7 @@ const FormularioEdicionPerfil = ({ datosIniciales, onActualizar, loading }) => {
             )}
           </div>
 
-          {/* Número de documento */}
+          {/* Número de documento - Solo lectura */}
           <div className={styles.formGroup}>
             <label htmlFor="numero_documento" className={styles.label}>
               Número de Documento
@@ -268,15 +291,13 @@ const FormularioEdicionPerfil = ({ datosIniciales, onActualizar, loading }) => {
               id="numero_documento"
               name="numero_documento"
               value={formData.numero_documento}
-              onChange={handleInputChange}
-              className={`${styles.input} ${errors.numero_documento ? styles.inputError : ''}`}
+              className={`${styles.input} ${styles.inputDisabled}`}
               placeholder="Número de identificación"
-              disabled={isSubmitting || loading}
+              disabled={true}
+              readOnly
               maxLength={15}
             />
-            {errors.numero_documento && (
-              <span className={styles.errorMessage}>{errors.numero_documento}</span>
-            )}
+            <span className={styles.helpText}>El número de documento no se puede modificar</span>
           </div>
 
           {/* Dirección */}
@@ -299,6 +320,71 @@ const FormularioEdicionPerfil = ({ datosIniciales, onActualizar, loading }) => {
               <span className={styles.errorMessage}>{errors.direccion}</span>
             )}
           </div>
+
+          {/* Campos específicos de autoridad */}
+          {esAutoridad && (
+            <>
+              <div className={styles.formGroup}>
+                <label htmlFor="cargo" className={styles.label}>
+                  Cargo
+                </label>
+                <input
+                  type="text"
+                  id="cargo"
+                  name="cargo"
+                  value={formData.cargo}
+                  onChange={handleInputChange}
+                  className={`${styles.input} ${errors.cargo ? styles.inputError : ''}`}
+                  placeholder="Ej: Director, Coordinador, etc."
+                  disabled={isSubmitting || loading}
+                  maxLength={100}
+                />
+                {errors.cargo && (
+                  <span className={styles.errorMessage}>{errors.cargo}</span>
+                )}
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="area_responsabilidad" className={styles.label}>
+                  Área de Responsabilidad
+                </label>
+                <input
+                  type="text"
+                  id="area_responsabilidad"
+                  name="area_responsabilidad"
+                  value={formData.area_responsabilidad}
+                  onChange={handleInputChange}
+                  className={`${styles.input} ${errors.area_responsabilidad ? styles.inputError : ''}`}
+                  placeholder="Ej: Obras Públicas, Limpieza, etc."
+                  disabled={isSubmitting || loading}
+                  maxLength={100}
+                />
+                {errors.area_responsabilidad && (
+                  <span className={styles.errorMessage}>{errors.area_responsabilidad}</span>
+                )}
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="numero_empleado" className={styles.label}>
+                  Número de Empleado
+                </label>
+                <input
+                  type="text"
+                  id="numero_empleado"
+                  name="numero_empleado"
+                  value={formData.numero_empleado}
+                  onChange={handleInputChange}
+                  className={`${styles.input} ${errors.numero_empleado ? styles.inputError : ''}`}
+                  placeholder="Número de empleado"
+                  disabled={isSubmitting || loading}
+                  maxLength={20}
+                />
+                {errors.numero_empleado && (
+                  <span className={styles.errorMessage}>{errors.numero_empleado}</span>
+                )}
+              </div>
+            </>
+          )}
         </div>
 
         {/* Botones de acción */}

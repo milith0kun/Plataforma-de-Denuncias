@@ -8,7 +8,19 @@ import { TableSkeleton } from '../../../components/common/LoadingSkeleton/Loadin
 import { useToast } from '../../../components/common/ToastContainer/ToastContainer';
 import ModalAsignarArea from '../../../components/denuncias/ModalAsignarArea';
 import denunciaService from '../../../services/denunciaService';
+import { BASE_URL } from '../../../services/api';
 import styles from './GestionDenunciasPage.module.css';
+
+// Función para obtener URL de imagen
+const obtenerUrlImagen = (evidencias) => {
+  if (!evidencias || evidencias.length === 0) return null;
+  const foto = evidencias[0];
+  if (!foto || !foto.url_archivo) return null;
+
+  const url = foto.url_archivo;
+  if (url.startsWith('http')) return url;
+  return `${BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+};
 
 const GestionDenunciasPage = () => {
   const navigate = useNavigate();
@@ -103,12 +115,13 @@ const GestionDenunciasPage = () => {
 
   // Filtrado y búsqueda
   const denunciasFiltradas = denuncias.filter(denuncia => {
+    const currentStateId = denuncia.id_estado_actual?._id || denuncia.id_estado_actual;
     const cumpleFiltroEstado = filtroEstado === 'todas' ||
-      denuncia.id_estado_actual === parseInt(filtroEstado);
+      currentStateId?.toString() === filtroEstado;
 
     const cumpleBusqueda = busqueda === '' ||
       denuncia.titulo.toLowerCase().includes(busqueda.toLowerCase()) ||
-      denuncia.descripcion?.toLowerCase().includes(busqueda.toLowerCase()) ||
+      (denuncia.descripcion_detallada || denuncia.descripcion || '').toLowerCase().includes(busqueda.toLowerCase()) ||
       denuncia.id_denuncia.toString().includes(busqueda);
 
     return cumpleFiltroEstado && cumpleBusqueda;
@@ -127,7 +140,8 @@ const GestionDenunciasPage = () => {
 
   const abrirModalCambiarEstado = (denuncia) => {
     setModalCambiarEstado(denuncia);
-    setEstadoSeleccionado(denuncia.id_estado_actual.toString());
+    const currentStateId = denuncia.id_estado_actual?._id || denuncia.id_estado_actual;
+    setEstadoSeleccionado(currentStateId?.toString() || '');
     setComentario('');
   };
 
@@ -155,7 +169,7 @@ const GestionDenunciasPage = () => {
 
       await denunciaService.cambiarEstado(
         modalCambiarEstado.id_denuncia,
-        parseInt(estadoSeleccionado),
+        estadoSeleccionado,
         comentario.trim()
       );
 
@@ -198,9 +212,9 @@ const GestionDenunciasPage = () => {
   // Calcular estadísticas
   const estadisticas = {
     total: denuncias.length,
-    pendientes: denuncias.filter(d => d.id_estado_actual === 1 || d.id_estado_actual === 2).length,
-    enProceso: denuncias.filter(d => d.id_estado_actual === 3 || d.id_estado_actual === 4).length,
-    resueltas: denuncias.filter(d => d.id_estado_actual === 5).length
+    pendientes: denuncias.filter(d => ['Registrada', 'En Revisión'].includes(d.estado_nombre)).length,
+    enProceso: denuncias.filter(d => ['Asignada', 'En Proceso'].includes(d.estado_nombre)).length,
+    resueltas: denuncias.filter(d => d.estado_nombre === 'Resuelta').length
   };
 
   if (error) {
@@ -337,6 +351,7 @@ const GestionDenunciasPage = () => {
                   <thead>
                     <tr>
                       <th>ID</th>
+                      <th>Imagen</th>
                       <th>Denuncia</th>
                       <th>Categoría</th>
                       <th>Estado</th>
@@ -351,14 +366,33 @@ const GestionDenunciasPage = () => {
                           <td className={styles.idCell}>
                             <span className={styles.idBadge}>{formatearIdDenuncia(denuncia.id_denuncia)}</span>
                           </td>
+                          <td className={styles.imageCell}>
+                            <div className={styles.thumbnailContainer} onClick={() => navigate(`/denuncias/${denuncia.id_denuncia}`)}>
+                              {obtenerUrlImagen(denuncia.evidencias) ? (
+                                <img
+                                  src={obtenerUrlImagen(denuncia.evidencias)}
+                                  alt={denuncia.titulo}
+                                  className={styles.thumbnail}
+                                />
+                              ) : (
+                                <div className={styles.noImage}>
+                                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                    <circle cx="8.5" cy="8.5" r="1.5" />
+                                    <polyline points="21 15 16 10 5 21" />
+                                  </svg>
+                                </div>
+                              )}
+                            </div>
+                          </td>
                           <td className={styles.denunciaCell}>
                             <div className={styles.denunciaContent}>
                               <div className={styles.denunciaTitle}>{denuncia.titulo}</div>
-                              {denuncia.descripcion && (
+                              {(denuncia.descripcion_detallada || denuncia.descripcion) && (
                                 <div className={styles.denunciaDescripcion}>
-                                  {denuncia.descripcion.length > 120
-                                    ? `${denuncia.descripcion.substring(0, 120)}...`
-                                    : denuncia.descripcion}
+                                  {((denuncia.descripcion_detallada || denuncia.descripcion).length > 80
+                                    ? `${(denuncia.descripcion_detallada || denuncia.descripcion).substring(0, 80)}...`
+                                    : (denuncia.descripcion_detallada || denuncia.descripcion))}
                                 </div>
                               )}
                               <div className={styles.denunciaUbicacion}>
@@ -531,15 +565,19 @@ const GestionDenunciasPage = () => {
                     required
                   >
                     <option value="">Seleccionar estado</option>
-                    {estados.map((estado) => (
-                      <option
-                        key={estado.id_estado}
-                        value={estado.id_estado}
-                        disabled={estado.id_estado === modalCambiarEstado.id_estado_actual}
-                      >
-                        {estado.nombre} {estado.id_estado === modalCambiarEstado.id_estado_actual ? '(actual)' : ''}
-                      </option>
-                    ))}
+                    {estados.map((estado) => {
+                      const currentStateId = modalCambiarEstado.id_estado_actual?._id || modalCambiarEstado.id_estado_actual;
+                      const isCurrent = estado.id_estado === currentStateId?.toString();
+                      return (
+                        <option
+                          key={estado.id_estado}
+                          value={estado.id_estado}
+                          disabled={isCurrent}
+                        >
+                          {estado.nombre} {isCurrent ? '(actual)' : ''}
+                        </option>
+                      );
+                    })}
                   </select>
                 </div>
 
