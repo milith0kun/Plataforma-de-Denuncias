@@ -1,0 +1,242 @@
+/* MetricCard - Diseño Limpio y Profesional */
+.metricCard {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e2e8f0;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    position: relative;
+}
+
+.metricCard:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.clickable:hover {
+    transform: translateY(-2px);
+}
+
+/* Estados de loading */
+.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.loadingOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+
+.spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid #e2e8f0;
+    border-top-color: var(--metric-color, #3b82f6);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Icono de métrica */
+.metricIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: var(--metric-bg);
+    color: var(--metric-color);
+}
+
+.metricIcon svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2;
+}
+
+/* Contenido de métrica */
+.metricContent {
+    flex: 1;
+    min-width: 0;
+}
+
+.metricValue {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.1;
+    margin-bottom: 4px;
+}
+
+.metricTitle {
+    font-size: 0.875rem;
+    color: #64748b;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+/* Tendencia */
+.metricTrend {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    font-size: 0.8125rem;
+}
+
+.trendIcon {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.trendIcon svg {
+    width: 100%;
+    height: 100%;
+    stroke-width: 2.5;
+}
+
+.trendValue {
+    font-weight: 600;
+}
+
+.trendPeriod {
+    color: #94a3b8;
+}
+
+.trendup {
+    color: #10b981;
+}
+
+.trendup .trendIcon svg {
+    stroke: #10b981;
+}
+
+.trenddown {
+    color: #ef4444;
+}
+
+.trenddown .trendIcon svg {
+    stroke: #ef4444;
+}
+
+/* Variantes de color */
+.blue {
+    --metric-color: #3b82f6;
+    --metric-bg: #eff6ff;
+}
+
+.green {
+    --metric-color: #10b981;
+    --metric-bg: #ecfdf5;
+}
+
+.orange {
+    --metric-color: #f59e0b;
+    --metric-bg: #fffbeb;
+}
+
+.red {
+    --metric-color: #ef4444;
+    --metric-bg: #fef2f2;
+}
+
+.purple {
+    --metric-color: #8b5cf6;
+    --metric-bg: #f5f3ff;
+}
+
+.indigo {
+    --metric-color: #6366f1;
+    --metric-bg: #eef2ff;
+}
+
+.pink {
+    --metric-color: #ec4899;
+    --metric-bg: #fdf2f8;
+}
+
+.teal {
+    --metric-color: #14b8a6;
+    --metric-bg: #f0fdfa;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .metricCard {
+        padding: 16px 20px;
+        gap: 14px;
+    }
+
+    .metricIcon {
+        width: 42px;
+        height: 42px;
+    }
+
+    .metricIcon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .metricValue {
+        font-size: 1.625rem;
+    }
+
+    .metricTitle {
+        font-size: 0.8125rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .metricCard {
+        padding: 14px 16px;
+        gap: 12px;
+    }
+
+    .metricIcon {
+        width: 38px;
+        height: 38px;
+    }
+
+    .metricIcon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .metricValue {
+        font-size: 1.5rem;
+    }
+
+    .metricTitle {
+        font-size: 0.75rem;
+    }
+
+    .metricTrend {
+        font-size: 0.75rem;
+    }
+}

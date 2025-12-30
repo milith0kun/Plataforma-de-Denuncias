@@ -1,0 +1,288 @@
+.container {
+    position: relative;
+}
+
+.bellButton {
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    color: #64748b;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bellButton:hover {
+    background-color: #f1f5f9;
+    color: #3b82f6;
+}
+
+.active {
+    color: #3b82f6;
+    background-color: #f1f5f9;
+}
+
+.badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background-color: #dc2626;
+    /* Rojo vibrante */
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 2px solid white;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    animation: scaleIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    right: -10px;
+    /* Alineado a la derecha pero con un pequeño margen */
+    margin-top: 10px;
+    /* Separación del header */
+    width: 360px;
+    /* Ancho cómodo */
+    background-color: white;
+    border-radius: 12px;
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06),
+        0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    /* Sombra elevada */
+    border: 1px solid #e2e8f0;
+    z-index: 1000;
+    /* Por encima de todo */
+    overflow: hidden;
+    animation: slideDown 0.2s ease-out;
+    transform-origin: top right;
+}
+
+/* Triangulito indicador */
+.dropdown::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 18px;
+    width: 12px;
+    height: 12px;
+    background-color: white;
+    transform: rotate(45deg);
+    border-left: 1px solid #e2e8f0;
+    border-top: 1px solid #e2e8f0;
+    z-index: 1001;
+}
+
+.header {
+    padding: 16px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    position: relative;
+    z-index: 1002;
+}
+
+.title {
+    font-weight: 600;
+    color: #0f172a;
+    font-size: 0.95rem;
+}
+
+.markAll {
+    font-size: 0.8rem;
+    color: #3b82f6;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.markAll:hover {
+    background-color: #eff6ff;
+}
+
+.list {
+    max-height: 400px;
+    overflow-y: auto;
+    /* Scroll dentro del dropdown */
+    overscroll-behavior: contain;
+    /* Evita scroll del body */
+}
+
+/* Scrollbar personalizado para la lista */
+.list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.list::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 3px;
+}
+
+.item {
+    padding: 16px;
+    border-bottom: 1px solid #f1f5f9;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    gap: 12px;
+    position: relative;
+}
+
+.item:last-child {
+    border-bottom: none;
+}
+
+.item:hover {
+    background-color: #f8fafc;
+}
+
+.unread {
+    background-color: #f0f9ff;
+    /* Azul muy tenue para no leídas */
+}
+
+.unread:hover {
+    background-color: #e0f2fe;
+}
+
+.unreadIndicator {
+    width: 8px;
+    height: 8px;
+    background-color: #3b82f6;
+    border-radius: 50%;
+    position: absolute;
+    top: 20px;
+    right: 16px;
+}
+
+.iconContainer {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.iconInfo {
+    background-color: #eff6ff;
+    color: #3b82f6;
+}
+
+.iconSuccess {
+    background-color: #f0fdf4;
+    color: #22c55e;
+}
+
+.iconWarning {
+    background-color: #fffbeb;
+    color: #f59e0b;
+}
+
+.iconError {
+    background-color: #fef2f2;
+    color: #ef4444;
+}
+
+.content {
+    flex: 1;
+    padding-right: 10px;
+    /* Espacio para el indicador */
+}
+
+.itemTitle {
+    font-weight: 600;
+    color: #334155;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+.itemMessage {
+    color: #64748b;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 6px;
+}
+
+.time {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.emptyState {
+    padding: 40px 20px;
+    text-align: center;
+    color: #64748b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.emptyIcon {
+    color: #cbd5e1;
+    width: 48px;
+    height: 48px;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .dropdown {
+        position: fixed;
+        /* Fixed en móviles */
+        top: 70px;
+        /* Debajo del header */
+        left: 10px;
+        right: 10px;
+        width: auto;
+        margin-top: 0;
+    }
+
+    .dropdown::before {
+        display: none;
+        /* Ocultar triangulito en móvil */
+    }
+}

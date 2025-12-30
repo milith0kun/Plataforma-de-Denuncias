@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(nul)",
+      "Bash(dir:*)",
+      "Bash(del \"CONFIGURACION_COMPLETADA.md\")",
+      "Bash(del \"Servidor\\MONGODB_SETUP.md\")",
+      "Bash(rm:*)",
+      "Bash(node verify-db.js:*)",
+      "Bash(node fix-indexes.js:*)",
+      "Bash(node:*)",
+      "Bash(move fix-css-variables.js fix-css-variables.cjs)",
+      "Bash(mkdir:*)",
+      "Bash(npm run dev:*)",
+      "Bash(taskkill //F //PID 12672)",
+      "Bash(ls -la \"D:\\\\Programacion Fuera de la U\\\\Programacion Fuera de la U\\\\Paginadenuencias\\\\Servidor\\\\src\\\\controllers\"\" 2>/dev/null || echo \"Controllers directory not found \")",
+      "Bash(ls -la \"D:\\\\Programacion Fuera de la U\\\\Programacion Fuera de la U\\\\Paginadenuencias\\\\Servidor\\\\src\\\\routes\"\" 2>/dev/null || echo \"Routes directory not found \")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -1,0 +1,41 @@
+import dotenv from 'dotenv';
+import app from './src/app.js';
+import { conectarDB } from './src/config/database.js';
+
+dotenv.config();
+
+const PORT = process.env.PORT || 5000;
+
+// Iniciar servidor
+const iniciarServidor = async () => {
+  try {
+    // Conectar a la base de datos MongoDB
+    const conexionExitosa = await conectarDB();
+
+    if (!conexionExitosa) {
+      console.error('No se pudo conectar a la base de datos. El servidor iniciará sin conexión a BD.');
+      // No salimos del proceso para permitir diagnósticos o reconexión futura
+      // process.exit(1); 
+    }
+
+    // Iniciar servidor Express
+    app.listen(PORT, () => {
+      console.log(`\n🚀 Servidor corriendo en http://localhost:${PORT}`);
+      console.log(`📡 API disponible en http://localhost:${PORT}/api/v1`);
+      console.log(`🔐 Endpoints de autenticación:`);
+      console.log(`   POST /api/v1/auth/register/ciudadano`);
+      console.log(`   POST /api/v1/auth/register/autoridad`);
+      console.log(`   POST /api/v1/auth/login`);
+      console.log(`   GET  /api/v1/auth/verify-token`);
+      console.log(`🔑 Recuperación de contraseña:`);
+      console.log(`   POST /api/v1/auth/forgot-password`);
+      console.log(`   POST /api/v1/auth/reset-password`);
+      console.log(`   GET  /api/v1/auth/verify-reset-token/:token\n`);
+    });
+  } catch (error) {
+    console.error('Error al iniciar el servidor:', error);
+    process.exit(1);
+  }
+};
+
+iniciarServidor();

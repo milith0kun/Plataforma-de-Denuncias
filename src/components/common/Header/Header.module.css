@@ -1,0 +1,876 @@
+/* =============================================================================
+   Header - Diseño Limpio y Totalmente Responsivo
+============================================================================= */
+
+/* Base del header */
+.header {
+  background: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* Contenedor principal */
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  gap: 16px;
+}
+
+/* Barra de navegación secundaria */
+.subNavBar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-left: 24px;
+  padding-left: 24px;
+  border-left: 1px solid #e2e8f0;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.pageTitle {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #0f172a;
+  white-space: nowrap;
+}
+
+/* =============================================================================
+   LOGO
+============================================================================= */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+.logo:hover {
+  opacity: 0.8;
+}
+
+.logoImg {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.logoTextContainer {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.logoTextTop {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+
+.logoTextBottom {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #3b82f6;
+  letter-spacing: -0.02em;
+}
+
+/* =============================================================================
+   NAVEGACIÓN PÚBLICA
+============================================================================= */
+.publicNav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.navLinkPublic {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.navLinkPublic:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+}
+
+.navButtonPrimary {
+  background: #3b82f6;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 8px 18px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+  border: none;
+  white-space: nowrap;
+}
+
+.navButtonPrimary:hover {
+  background: #2563eb;
+}
+
+/* =============================================================================
+   NAVEGACIÓN AUTENTICADA
+============================================================================= */
+.navMenu {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  color: #64748b;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.navLink:hover {
+  color: #0f172a;
+  background: #f8fafc;
+}
+
+.navLinkActive {
+  color: #3b82f6;
+  background: #eff6ff;
+}
+
+.navLinkPrimary {
+  background: #3b82f6;
+  color: white;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  padding: 8px 14px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.navLinkPrimary:hover {
+  background: #2563eb;
+}
+
+.navLinkPrimary .navIcon {
+  color: white;
+}
+
+.navIcon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.navIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.navText {
+  white-space: nowrap;
+}
+
+/* =============================================================================
+   SECCIÓN DE USUARIO
+============================================================================= */
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Notificaciones */
+.notificationBtn {
+  position: relative;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.notificationBtn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.notificationBtn:hover {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+.notificationBadge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: #ef4444;
+  color: white;
+  font-size: 9px;
+  font-weight: 600;
+  padding: 1px 4px;
+  border-radius: 10px;
+  min-width: 14px;
+  text-align: center;
+  line-height: 1;
+  border: 2px solid white;
+}
+
+/* =============================================================================
+   PERFIL
+============================================================================= */
+.profileMenu {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.profileBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  padding: 4px 10px 4px 4px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.profileBtn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  background: #3b82f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: white;
+  flex-shrink: 0;
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.25;
+}
+
+.userName {
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: #0f172a;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userRole {
+  font-size: 0.625rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.dropdownIcon {
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  color: #94a3b8;
+  transition: transform 0.2s ease;
+}
+
+.dropdownIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.dropdownIconOpen {
+  transform: rotate(180deg);
+}
+
+/* =============================================================================
+   DROPDOWN
+============================================================================= */
+.profileDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+  min-width: 240px;
+  overflow: hidden;
+  z-index: 1001;
+  animation: dropdownSlide 0.15s ease;
+}
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdownHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.dropdownAvatar {
+  width: 40px;
+  height: 40px;
+  background: #3b82f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: white;
+  flex-shrink: 0;
+}
+
+.dropdownInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dropdownName {
+  font-weight: 600;
+  font-size: 0.8125rem;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdownEmail {
+  font-size: 0.6875rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdownRole {
+  display: inline-flex;
+  width: fit-content;
+  background: #eff6ff;
+  color: #3b82f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.5625rem;
+  font-weight: 600;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dropdownDivider {
+  height: 1px;
+  background: #e2e8f0;
+  margin: 4px 0;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  color: #334155;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  transition: background 0.15s ease;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.dropdownItem:hover {
+  background: #f8fafc;
+}
+
+.dropdownItemIcon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+}
+
+.dropdownItemIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.dropdownItemDanger {
+  color: #ef4444;
+  border-top: 1px solid #e2e8f0;
+  margin-top: 4px;
+}
+
+.dropdownItemDanger .dropdownItemIcon {
+  color: #ef4444;
+}
+
+.dropdownItemDanger:hover {
+  background: #fef2f2;
+}
+
+/* =============================================================================
+   BOTÓN MENÚ MÓVIL
+============================================================================= */
+.mobileMenuBtn {
+  display: none;
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.mobileMenuBtn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.mobileMenuBtn:hover {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+/* =============================================================================
+   MENÚ MÓVIL
+============================================================================= */
+.mobileMenu {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 999;
+  border-top: 1px solid #e2e8f0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  animation: mobileMenuSlide 0.2s ease;
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
+}
+
+@keyframes mobileMenuSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobileNavLink {
+  color: #334155;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 12px 14px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.mobileNavLink:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.mobileNavButton {
+  background: #3b82f6;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 12px 14px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+}
+
+.mobileNavButton:hover {
+  background: #2563eb;
+}
+
+.mobileMenuDivider {
+  height: 1px;
+  background: #e2e8f0;
+  margin: 6px 0;
+}
+
+.mobileNavLinkDanger {
+  color: #ef4444;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 12px 14px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  cursor: pointer;
+  width: 100%;
+}
+
+.mobileNavLinkDanger:hover {
+  background: #fee2e2;
+  border-color: #ef4444;
+}
+
+.mobileNavLink .navIcon,
+.mobileNavButton .navIcon,
+.mobileNavLinkDanger .navIcon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* =============================================================================
+   OVERLAY
+============================================================================= */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 998;
+  animation: overlayFade 0.15s ease;
+}
+
+@keyframes overlayFade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* =============================================================================
+   RESPONSIVE - Breakpoints optimizados
+============================================================================= */
+
+/* Pantallas grandes - mostrar todo */
+@media (min-width: 1200px) {
+  .container {
+    padding: 0 32px;
+  }
+}
+
+/* Pantallas medianas - ocultar texto de navegación */
+@media (max-width: 1200px) {
+  .subNavBar {
+    display: none;
+  }
+
+  .navText {
+    display: none;
+  }
+
+  .navLink {
+    padding: 8px;
+  }
+
+  .navLinkPrimary {
+    padding: 8px 10px;
+  }
+}
+
+/* Tablets - simplificar aún más */
+@media (max-width: 900px) {
+  .container {
+    padding: 0 16px;
+    height: 64px;
+  }
+
+  .profileInfo {
+    display: none;
+  }
+
+  .profileBtn {
+    padding: 4px;
+  }
+
+  .dropdownIcon {
+    display: none;
+  }
+
+  .navLink {
+    padding: 6px;
+  }
+
+  .navIcon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .navLinkPrimary {
+    padding: 8px;
+  }
+
+  .navLinkPrimary .navText {
+    display: none;
+  }
+}
+
+/* Móviles - mostrar solo logo, perfil y menú hamburguesa */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 12px;
+    height: 64px;
+  }
+
+  .mobileMenuBtn {
+    display: flex;
+  }
+
+  .publicNav,
+  .navMenu,
+  .notificationBtn {
+    display: none;
+  }
+
+  .logoImg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .logoTextTop,
+  .logoTextBottom {
+    font-size: 0.875rem;
+  }
+
+  .userSection {
+    gap: 6px;
+  }
+
+  .avatar {
+    width: 30px;
+    height: 30px;
+    font-size: 0.6875rem;
+  }
+
+  .mobileMenu {
+    top: 64px;
+    max-height: calc(100vh - 64px);
+  }
+
+  .profileDropdown {
+    right: 0;
+    min-width: 220px;
+  }
+}
+
+/* Móviles pequeños */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 10px;
+    height: 60px;
+  }
+
+  .logoTextContainer {
+    display: none;
+  }
+
+  .logo {
+    gap: 0;
+  }
+
+  .logoImg {
+    width: 34px;
+    height: 34px;
+  }
+
+  .mobileMenuBtn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .mobileMenuBtn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 0.625rem;
+  }
+
+  .profileBtn {
+    padding: 3px;
+    border-radius: 50%;
+  }
+
+  .mobileMenu {
+    top: 60px;
+    max-height: calc(100vh - 60px);
+    padding: 10px;
+  }
+
+  .profileDropdown {
+    position: fixed;
+    top: 60px;
+    right: 10px;
+    left: 10px;
+    min-width: auto;
+    width: calc(100% - 20px);
+  }
+
+  .mobileNavLink,
+  .mobileNavButton,
+  .mobileNavLinkDanger {
+    padding: 11px 12px;
+    font-size: 0.8125rem;
+  }
+}
+
+/* Pantallas muy pequeñas */
+@media (max-width: 360px) {
+  .container {
+    padding: 0 8px;
+    height: 56px;
+  }
+
+  .logoImg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .avatar {
+    width: 26px;
+    height: 26px;
+  }
+
+  .mobileMenuBtn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .mobileMenu {
+    top: 56px;
+    max-height: calc(100vh - 56px);
+    padding: 8px;
+    gap: 4px;
+  }
+
+  .mobileNavLink,
+  .mobileNavButton,
+  .mobileNavLinkDanger {
+    padding: 10px;
+    font-size: 0.75rem;
+  }
+}
