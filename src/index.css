@@ -344,9 +344,10 @@ body {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-normal);
   line-height: 1.6;
-  color: var(--color-text-primary);
-  background-color: var(--color-bg-primary);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
   min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #root {
@@ -363,7 +364,7 @@ h6 {
   font-family: var(--font-headings);
   font-weight: var(--font-weight-bold);
   line-height: 1.2;
-  color: var(--color-text-primary);
+  color: var(--text-primary);
   margin-bottom: var(--spacing-md);
 }
 
