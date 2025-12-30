@@ -7,7 +7,7 @@
 .dashboardContainer {
   display: flex;
   min-height: 100vh;
-  background: #f8fafc;
+  background: var(--bg-secondary);
   width: 100%;
   max-width: 100vw;
   overflow-x: hidden;
@@ -126,12 +126,12 @@
    HERO SECTION
 ============================================================================= */
 .heroSection {
-  background: white;
+  background: var(--bg-primary);
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
   width: 100%;
   box-sizing: border-box;
 }
@@ -152,14 +152,14 @@
 .heroLeft h1 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
   margin: 0 0 6px 0;
   letter-spacing: -0.025em;
   word-wrap: break-word;
 }
 
 .heroLeft p {
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 0.9rem;
   margin: 0 0 16px 0;
   word-wrap: break-word;
@@ -192,7 +192,7 @@
 }
 
 .btnSecondary {
-  background: white;
+  background: var(--bg-primary);
   color: #3b82f6;
   border: 1px solid #3b82f6;
   padding: 10px 18px;
@@ -224,11 +224,11 @@
 }
 
 .metricCard {
-  background: white;
+  background: var(--bg-primary);
   border-radius: 8px;
   padding: 10px 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
   transition: box-shadow 0.2s ease;
   min-width: 0;
 }
@@ -268,7 +268,7 @@
 
 .metricLabel {
   font-size: 0.65rem;
-  color: #64748b;
+  color: var(--text-secondary);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -277,14 +277,14 @@
 .metricValue {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
   margin: 0 0 2px 0;
   line-height: 1.1;
 }
 
 .metricChange {
   font-size: 0.7rem;
-  color: #64748b;
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -301,13 +301,13 @@
 }
 
 .actionCard {
-  background: white;
+  background: var(--bg-primary);
   border-radius: 8px;
   padding: 12px 14px;
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
   min-width: 0;
 }
 
@@ -370,13 +370,13 @@
 .actionCardTitle {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text-primary);
   margin: 0 0 3px 0;
 }
 
 .actionCardDesc {
   font-size: 0.7rem;
-  color: #64748b;
+  color: var(--text-secondary);
   line-height: 1.4;
   margin: 0 0 8px 0;
 }
@@ -396,11 +396,11 @@
    TABLE CARD - Responsivo
 ============================================================================= */
 .tableCard {
-  background: white;
+  background: var(--bg-primary);
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
   margin-bottom: 20px;
   width: 100%;
   box-sizing: border-box;
@@ -419,7 +419,7 @@
 .tableTitle {
   font-size: 1rem;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -427,7 +427,7 @@
 }
 
 .tableTitle svg {
-  color: #64748b;
+  color: var(--text-secondary);
   flex-shrink: 0;
 }
 
@@ -459,30 +459,30 @@
 }
 
 .table thead {
-  background: #f8fafc;
+  background: var(--bg-secondary);
 }
 
 .table th {
   padding: 10px 12px;
   text-align: left;
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border-color);
   white-space: nowrap;
 }
 
 .table td {
   padding: 12px;
-  border-bottom: 1px solid #f1f5f9;
-  color: #334155;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
   font-size: 0.8125rem;
 }
 
 .table tbody tr:hover {
-  background: #f8fafc;
+  background: var(--bg-hover);
 }
 
 .table tbody tr:last-child td {
