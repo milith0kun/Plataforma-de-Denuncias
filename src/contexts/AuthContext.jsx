@@ -151,7 +151,7 @@ export const AuthProvider = ({ children }) => {
     solicitarRecuperacion,
     restablecerPassword,
     limpiarError,
-    estaAutenticado: !!usuario,
+    estaAutenticado: !!usuario || !!localStorage.getItem('token'),
     esAdmin: esUsuarioAdmin(usuario),
     esAutoridad: esUsuarioAutoridad(usuario),
     esCiudadano: esUsuarioCiudadano(usuario)

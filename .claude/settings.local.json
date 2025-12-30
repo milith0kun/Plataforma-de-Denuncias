@@ -15,7 +15,10 @@
       "Bash(taskkill //F //PID 12672)",
       "Bash(ls -la \"D:\\\\Programacion Fuera de la U\\\\Programacion Fuera de la U\\\\Paginadenuencias\\\\Servidor\\\\src\\\\controllers\"\" 2>/dev/null || echo \"Controllers directory not found \")",
       "Bash(ls -la \"D:\\\\Programacion Fuera de la U\\\\Programacion Fuera de la U\\\\Paginadenuencias\\\\Servidor\\\\src\\\\routes\"\" 2>/dev/null || echo \"Routes directory not found \")",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(npm run dev)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)"
     ],
     "deny": [],
     "ask": []

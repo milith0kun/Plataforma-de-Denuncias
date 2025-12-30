@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
-import { 
+import {
   BarChart, Bar, PieChart, Pie, Cell, LineChart, Line,
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer 
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
-import { 
-  LayoutDashboard, FileText, AlertCircle, CheckCircle2, 
+import {
+  LayoutDashboard, FileText, AlertCircle, CheckCircle2,
   Clock, TrendingUp, Users, MapPin, Filter, Calendar,
   BarChart3, Download, Menu, X, Activity, ChevronRight, Eye
 } from 'lucide-react';
@@ -23,7 +23,7 @@ const DashboardAutoridadPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(() => {
     if (window.innerWidth <= 1024) return false;
     const savedState = localStorage.getItem('autoridadSidebarOpen');
-    return savedState !== null ? JSON.parse(savedState) : true;
+    return savedState !== null ? JSON.parse(savedState) : false;
   });
   const [metricas, setMetricas] = useState({
     total: 0,
@@ -37,9 +37,32 @@ const DashboardAutoridadPage = () => {
   const [cargando, setCargando] = useState(true);
   const [filtroTiempo, setFiltroTiempo] = useState('mes');
 
+  // Función para obtener la fecha de inicio según el filtro
+  const obtenerFechaInicio = (filtro) => {
+    const ahora = new Date();
+    switch (filtro) {
+      case 'hoy':
+        return new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
+      case 'semana':
+        const hace7Dias = new Date(ahora);
+        hace7Dias.setDate(ahora.getDate() - 7);
+        return hace7Dias;
+      case 'mes':
+        const hace30Dias = new Date(ahora);
+        hace30Dias.setDate(ahora.getDate() - 30);
+        return hace30Dias;
+      case 'año':
+        const hace365Dias = new Date(ahora);
+        hace365Dias.setFullYear(ahora.getFullYear() - 1);
+        return hace365Dias;
+      default:
+        return new Date(0); // Todas las denuncias
+    }
+  };
+
   useEffect(() => {
     cargarDatos();
-    
+
     const handleResize = () => {
       const mobile = window.innerWidth <= 1024;
       setIsMobile(mobile);
@@ -47,14 +70,14 @@ const DashboardAutoridadPage = () => {
         setSidebarOpen(false);
       } else {
         const savedState = localStorage.getItem('autoridadSidebarOpen');
-        setSidebarOpen(savedState !== null ? JSON.parse(savedState) : true);
+        setSidebarOpen(savedState !== null ? JSON.parse(savedState) : false);
       }
     };
-    
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
-  
+  }, [filtroTiempo]); // Re-cargar datos cuando cambia el filtro
+
   useEffect(() => {
     if (!isMobile) {
       localStorage.setItem('autoridadSidebarOpen', JSON.stringify(sidebarOpen));
@@ -66,13 +89,20 @@ const DashboardAutoridadPage = () => {
       setCargando(true);
 
       const [denunciasRes, statsRes] = await Promise.all([
-        denunciaService.obtenerDenuncias({ limite: 100, orden: 'fecha_registro', direccion: 'DESC' }),
+        denunciaService.obtenerDenuncias({ limite: 500, orden: 'fecha_registro', direccion: 'DESC' }),
         estadisticasService.obtenerEstadisticasGenerales().catch(() => null)
       ]);
 
       if (denunciasRes.success) {
-        const denuncias = denunciasRes.data.denuncias;
-        
+        const todasDenuncias = denunciasRes.data.denuncias;
+        const fechaInicio = obtenerFechaInicio(filtroTiempo);
+
+        // Filtrar denuncias según el período seleccionado
+        const denuncias = todasDenuncias.filter(d => {
+          const fechaDenuncia = new Date(d.fecha_registro);
+          return fechaDenuncia >= fechaInicio;
+        });
+
         const pendientes = denuncias.filter(d => ['Registrada', 'En Revisión'].includes(d.estado_nombre)).length;
         const enProceso = denuncias.filter(d => ['Asignada', 'En Proceso'].includes(d.estado_nombre)).length;
         const resueltas = denuncias.filter(d => d.estado_nombre === 'Resuelta').length;
@@ -89,6 +119,7 @@ const DashboardAutoridadPage = () => {
           urgentes
         });
 
+        // Mostrar las 8 más recientes del período filtrado
         setDenunciasRecientes(denuncias.slice(0, 8));
       }
 
@@ -104,10 +135,10 @@ const DashboardAutoridadPage = () => {
 
   const formatearFecha = (fecha) => {
     if (!fecha) return '';
-    return new Date(fecha).toLocaleDateString('es-ES', { 
-      day: '2-digit', 
-      month: 'short', 
-      year: 'numeric' 
+    return new Date(fecha).toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
     });
   };
 
@@ -123,9 +154,19 @@ const DashboardAutoridadPage = () => {
     return colores[estado] || '#6b7280';
   };
 
-  const datosEstados = estadisticas?.porEstado || [];
-  const datosCategorias = estadisticas?.porCategoria?.slice(0, 5) || [];
-  const datosTendencia = estadisticas?.tendenciaMensual || [];
+  // Transformar datos del backend al formato esperado por Recharts
+  const datosEstados = (estadisticas?.porEstado || []).map(item => ({
+    name: item.estado || item.name,
+    value: item.cantidad || item.value || 0
+  }));
+  const datosCategorias = (estadisticas?.porCategoria?.slice(0, 5) || []).map(item => ({
+    name: item.categoria || item.name,
+    value: item.cantidad || item.value || 0
+  }));
+  const datosTendencia = (estadisticas?.tendenciaMensual || []).map(item => ({
+    mes: item.mes,
+    cantidad: item.cantidad || 0
+  }));
   const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
   if (cargando) {
@@ -152,7 +193,7 @@ const DashboardAutoridadPage = () => {
                 <Menu size={24} />
               </button>
             </div>
-            
+
             <nav className={styles.sidebarNav}>
               <a href="/dashboard-autoridad" className={styles.navItem}>
                 <LayoutDashboard size={20} />
@@ -185,7 +226,7 @@ const DashboardAutoridadPage = () => {
               </p>
             </div>
             <div className={styles.headerRight}>
-              <select 
+              <select
                 className={styles.filterSelect}
                 value={filtroTiempo}
                 onChange={(e) => setFiltroTiempo(e.target.value)}
@@ -241,85 +282,6 @@ const DashboardAutoridadPage = () => {
             </div>
           </div>
 
-          {/* Charts Grid */}
-          {estadisticas && (
-            <div className={styles.chartsGrid}>
-              {/* Tendencia Mensual */}
-              <div className={styles.chartCard}>
-                <h3 className={styles.chartTitle}>
-                  <TrendingUp size={20} />
-                  Tendencia Mensual
-                </h3>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={datosTendencia}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                    <XAxis dataKey="mes" stroke="#64748b" />
-                    <YAxis stroke="#64748b" />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: '#fff', 
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '8px' 
-                      }} 
-                    />
-                    <Legend />
-                    <Line type="monotone" dataKey="cantidad" stroke="#3b82f6" strokeWidth={2} name="Denuncias" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Distribución por Estado */}
-              <div className={styles.chartCard}>
-                <h3 className={styles.chartTitle}>
-                  <Activity size={20} />
-                  Distribución por Estado
-                </h3>
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={datosEstados}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={(entry) => `${entry.name}: ${entry.value}`}
-                      outerRadius={100}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {datosEstados.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Denuncias por Categoría */}
-              <div className={styles.chartCard} style={{ gridColumn: 'span 2' }}>
-                <h3 className={styles.chartTitle}>
-                  <BarChart3 size={20} />
-                  Denuncias por Categoría
-                </h3>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={datosCategorias}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                    <XAxis dataKey="name" stroke="#64748b" />
-                    <YAxis stroke="#64748b" />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: '#fff', 
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '8px' 
-                      }} 
-                    />
-                    <Bar dataKey="value" fill="#3b82f6" radius={[8, 8, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          )}
-
           {/* Recent Denuncias Table */}
           <div className={styles.tableCard}>
             <div className={styles.tableHeader}>
@@ -364,7 +326,7 @@ const DashboardAutoridadPage = () => {
                           </span>
                         </td>
                         <td>
-                          <span 
+                          <span
                             className={styles.statusBadge}
                             style={{ backgroundColor: obtenerColorEstado(denuncia.estado_nombre) }}
                           >
@@ -375,7 +337,7 @@ const DashboardAutoridadPage = () => {
                         <td>
                           <button
                             className={styles.actionButton}
-                            onClick={() => window.location.href = `/denuncias/${denuncia.id_denuncia}`}
+                            onClick={() => navigate(`/denuncias/${denuncia.id_denuncia}`)}
                           >
                             <Eye size={16} />
                             Ver
@@ -388,9 +350,88 @@ const DashboardAutoridadPage = () => {
               )}
             </div>
           </div>
+
+          {/* Charts Grid */}
+          {estadisticas && (
+            <div className={styles.chartsGrid}>
+              {/* Tendencia Mensual */}
+              <div className={styles.chartCard}>
+                <h3 className={styles.chartTitle}>
+                  <TrendingUp size={20} />
+                  Tendencia Mensual
+                </h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={datosTendencia}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                    <XAxis dataKey="mes" stroke="#64748b" />
+                    <YAxis stroke="#64748b" />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#fff',
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Legend />
+                    <Line type="monotone" dataKey="cantidad" stroke="#3b82f6" strokeWidth={2} name="Denuncias" />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* Distribución por Estado */}
+              <div className={styles.chartCard}>
+                <h3 className={styles.chartTitle}>
+                  <Activity size={20} />
+                  Distribución por Estado
+                </h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={datosEstados}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={(entry) => `${entry.name}: ${entry.value}`}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {datosEstados.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* Denuncias por Categoría */}
+              <div className={`${styles.chartCard} ${styles.chartCardFull}`}>
+                <h3 className={styles.chartTitle}>
+                  <BarChart3 size={20} />
+                  Denuncias por Categoría
+                </h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={datosCategorias}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                    <XAxis dataKey="name" stroke="#64748b" />
+                    <YAxis stroke="#64748b" />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#fff',
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Bar dataKey="value" fill="#3b82f6" radius={[8, 8, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          )}
         </main>
       </div>
-      
+
       {/* Navegación inferior para móviles */}
       {isMobile && <BottomNavigation userType="autoridad" />}
     </>

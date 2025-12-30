@@ -21,7 +21,7 @@ const HomePage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(() => {
     if (typeof window === 'undefined') return true;
     const savedState = localStorage.getItem('sidebarOpen');
-    return savedState !== null ? JSON.parse(savedState) : true;
+    return savedState !== null ? JSON.parse(savedState) : false;
   });
 
   const [estadisticas, setEstadisticas] = useState({
@@ -216,45 +216,6 @@ const HomePage = () => {
               </div>
               <p className={styles.metricValue}>{estadisticas.denunciasResueltas}</p>
               <p className={styles.metricChange}>Completadas</p>
-            </div>
-          </div>
-
-          {/* Quick Actions */}
-          <div className={styles.quickActionsGrid}>
-            <div className={`${styles.actionCard} ${styles.primary}`} onClick={() => navigate('/nueva-denuncia')}>
-              <div className={styles.actionCardIcon}>
-                <Plus size={24} />
-              </div>
-              <h3 className={styles.actionCardTitle}>Nueva Denuncia</h3>
-              <p className={styles.actionCardDesc}>Reporta un problema en tu comunidad</p>
-              <div className={styles.actionCardArrow}>→</div>
-            </div>
-
-            <div className={`${styles.actionCard} ${styles.secondary}`} onClick={() => navigate('/denuncias')}>
-              <div className={styles.actionCardIcon}>
-                <FileText size={24} />
-              </div>
-              <h3 className={styles.actionCardTitle}>Mis Denuncias</h3>
-              <p className={styles.actionCardDesc}>Revisa el estado de tus reportes</p>
-              <div className={styles.actionCardArrow}>→</div>
-            </div>
-
-            <div className={`${styles.actionCard} ${styles.tertiary}`} onClick={() => navigate('/seguimiento')}>
-              <div className={styles.actionCardIcon}>
-                <MapPin size={24} />
-              </div>
-              <h3 className={styles.actionCardTitle}>Seguimiento</h3>
-              <p className={styles.actionCardDesc}>Rastrea tus denuncias</p>
-              <div className={styles.actionCardArrow}>→</div>
-            </div>
-
-            <div className={`${styles.actionCard} ${styles.quaternary}`} onClick={() => navigate('/perfil')}>
-              <div className={styles.actionCardIcon}>
-                <User size={24} />
-              </div>
-              <h3 className={styles.actionCardTitle}>Mi Perfil</h3>
-              <p className={styles.actionCardDesc}>Actualiza tu información</p>
-              <div className={styles.actionCardArrow}>→</div>
             </div>
           </div>
 

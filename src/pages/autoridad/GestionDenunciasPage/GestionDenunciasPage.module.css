@@ -1,12 +1,21 @@
 .pageContainer {
   min-height: 100vh;
   background-color: var(--color-background);
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 .container {
-  max-width: 1600px;
+  max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
-  padding: var(--spacing-2xl) var(--spacing-lg);
+  padding: 2rem;
+  background-color: #f8fafc;
+  min-height: 100vh;
+  padding-top: 31px;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 @media (max-width: 1024px) {
@@ -43,9 +52,11 @@
 /* Metrics Grid */
 .metricsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-2xl);
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+  width: 100%;
+  max-width: 100%;
 }
 
 .metricSkeleton {
@@ -241,9 +252,10 @@
 }
 
 .table tbody tr:hover {
-  background: #f0f4ff !important;
-  transform: scale(1.001);
-  box-shadow: 0 2px 8px rgba(21, 53, 149, 0.08);
+  background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(21, 53, 149, 0.12);
+  border-left: 3px solid var(--color-primary);
 }
 
 .table td {
@@ -257,43 +269,59 @@
 }
 
 .idBadge {
-  display: inline-block;
-  padding: 4px 10px;
-  background: var(--color-gray-100);
-  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  background: var(--color-primary);
+  border-radius: 12px;
   font-size: 0.813rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0.3px;
+  font-family: 'Courier New', monospace;
+}
+
+.denunciaCell {
+  max-width: 450px;
+  min-width: 300px;
+}
+
+.denunciaContent {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.denunciaTitle {
   font-weight: 600;
-  color: var(--color-gray-700);
+  color: var(--color-gray-900);
+  font-size: 0.938rem;
+  line-height: 1.4;
 }
 
-.tituloCell {
-  max-width: 300px;
+.denunciaDescripcion {
+  font-size: 0.813rem;
+  color: var(--color-gray-600);
+  line-height: 1.5;
+  text-align: justify;
 }
 
-.titleWrapper {
+.denunciaUbicacion {
+  font-size: 0.75rem;
+  color: var(--color-gray-500);
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-}
-
-.titleText {
-  font-weight: 500;
-  color: var(--color-gray-900);
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  gap: 4px;
 }
 
 .categoriaTag {
-  display: inline-block;
-  padding: 4px 12px;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
   background: var(--color-primary-light);
   color: var(--color-primary-dark);
   border-radius: 20px;
-  font-size: 0.75rem;
+  font-size: 0.813rem;
   font-weight: 600;
   white-space: nowrap;
 }
@@ -326,33 +354,39 @@
 }
 
 .estadoRegistrada {
-  background: rgba(59, 130, 246, 0.1);
+  background: rgba(59, 130, 246, 0.12);
   color: var(--color-info);
+  border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
 .estadoPendiente {
-  background: rgba(245, 158, 11, 0.1);
+  background: rgba(245, 158, 11, 0.12);
   color: var(--color-warning);
+  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .estadoProceso {
-  background: rgba(139, 92, 246, 0.1);
+  background: rgba(139, 92, 246, 0.12);
   color: #7c3aed;
+  border: 1px solid rgba(139, 92, 246, 0.3);
 }
 
 .estadoAsignada {
-  background: rgba(20, 184, 166, 0.1);
+  background: rgba(20, 184, 166, 0.12);
   color: #14b8a6;
+  border: 1px solid rgba(20, 184, 166, 0.3);
 }
 
 .estadoResuelta {
-  background: rgba(16, 185, 129, 0.1);
+  background: rgba(16, 185, 129, 0.12);
   color: var(--color-success);
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .estadoCerrada {
-  background: rgba(107, 114, 128, 0.1);
+  background: rgba(107, 114, 128, 0.12);
   color: var(--color-gray-600);
+  border: 1px solid rgba(107, 114, 128, 0.3);
 }
 
 /* Action Buttons */
@@ -366,12 +400,12 @@
 .btnArea {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border: none;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 10px;
   border-radius: 6px;
-  font-size: 0.813rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
@@ -385,41 +419,36 @@
 }
 
 .btnVer {
-  background: var(--color-info);
-  color: white;
+  background: white;
+  color: var(--color-gray-700);
+  border: 1px solid var(--color-gray-300);
 }
 
 .btnVer:hover {
-  background: #2563eb;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+  background: var(--color-gray-50);
+  border-color: var(--color-gray-400);
 }
 
 .btnEstado {
-  background: var(--color-primary);
-  color: white;
+  background: white;
+  color: var(--color-gray-700);
+  border: 1px solid var(--color-gray-300);
 }
 
 .btnEstado:hover {
-  background: var(--color-primary-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(21, 53, 149, 0.3);
+  background: var(--color-gray-50);
+  border-color: var(--color-gray-400);
 }
 
 .btnArea {
-  background: var(--color-success);
-  color: white;
+  background: white;
+  color: var(--color-gray-700);
+  border: 1px solid var(--color-gray-300);
 }
 
 .btnArea:hover {
-  background: #059669;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
-}
-
-.btnArea svg {
-  width: 16px;
-  height: 16px;
+  background: var(--color-gray-50);
+  border-color: var(--color-gray-400);
 }
 
 /* Paginación */
@@ -613,6 +642,7 @@
   overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   animation: slideUp 0.3s ease;
+  margin: 0;
 }
 
 @keyframes slideUp {
@@ -825,9 +855,9 @@
 /* Responsive */
 @media (max-width: 768px) {
   .container {
-    padding: var(--spacing-lg) var(--spacing-md);
-    padding-bottom: calc(150px + var(--spacing-lg));
-    /* Espacio para bottom navigation */
+    padding: 1rem;
+    padding-top: 36px;
+    padding-bottom: calc(150px + 1rem);
   }
 
   .title {
@@ -871,14 +901,17 @@
   }
 
   .actionButtons {
-    flex-direction: column;
+    flex-direction: row;
+    gap: 4px;
   }
 
   .btnVer,
   .btnEstado,
   .btnArea {
-    width: 100%;
-    justify-content: center;
+    flex: 1;
+    min-width: 0;
+    padding: 8px 6px;
+    font-size: 0.688rem;
   }
 
   .pagination {
@@ -894,19 +927,61 @@
 
   .modalContent {
     max-width: 100%;
+    max-height: 85vh;
+    margin-top: auto;
     border-radius: 12px 12px 0 0;
+  }
+
+  .modal {
+    padding: var(--spacing-sm);
   }
 }
 
 /* Extra small screens - Better mobile experience */
 @media (max-width: 480px) {
   .container {
-    padding: var(--spacing-md) var(--spacing-sm);
-    padding-bottom: calc(150px + var(--spacing-md));
+    padding: 0.75rem;
+    padding-top: 28px;
+    padding-bottom: calc(150px + 1rem);
   }
 
   .title {
     font-size: 1.5rem;
+  }
+
+  /* Botones compactos solo icono */
+  .actionButtons {
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .btnVer,
+  .btnEstado,
+  .btnArea {
+    flex: initial;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .btnVer span,
+  .btnEstado span,
+  .btnArea span {
+    display: none;
+  }
+
+  .btnVer svg,
+  .btnEstado svg,
+  .btnArea svg {
+    margin: 0;
+    width: 20px;
+    height: 20px;
   }
 
   .subtitle {
@@ -957,52 +1032,107 @@
   }
 
   .table tbody tr {
-    display: block;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto auto auto;
     background: white;
     border-radius: 12px;
     box-shadow: var(--shadow-sm);
     padding: var(--spacing-md);
     border: 1px solid var(--color-gray-200);
+    gap: var(--spacing-sm);
+    grid-template-areas:
+      "id categoria estado"
+      "denuncia denuncia denuncia"
+      "fecha fecha fecha"
+      "acciones acciones acciones";
   }
 
   .table tbody tr:hover {
     transform: none;
   }
 
-  .table td {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--spacing-xs) 0;
-    border-bottom: 1px solid var(--color-gray-100);
+  /* ID - Primera celda de la primera fila */
+  .table td:nth-child(1) {
+    grid-area: id;
+    padding: 0;
+    justify-self: start;
   }
 
-  .table td:last-child {
-    border-bottom: none;
+  /* Denuncia - Segunda fila completa */
+  .table td:nth-child(2) {
+    grid-area: denuncia;
+    padding: var(--spacing-sm) 0;
+  }
+
+  /* Categoría - Segunda celda de la primera fila */
+  .table td:nth-child(3) {
+    grid-area: categoria;
+    padding: 0;
+    justify-self: center;
+  }
+
+  /* Estado - Tercera celda de la primera fila */
+  .table td:nth-child(4) {
+    grid-area: estado;
+    padding: 0;
+    justify-self: end;
+  }
+
+  /* Fecha - Tercera fila completa */
+  .table td:nth-child(5) {
+    grid-area: fecha;
+    padding: 0;
+  }
+
+  /* Acciones - Cuarta fila completa */
+  .table td:nth-child(6) {
+    grid-area: acciones;
     padding-top: var(--spacing-sm);
-  }
-
-  .table td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: var(--color-gray-600);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    flex-shrink: 0;
-    margin-right: var(--spacing-sm);
   }
 
   .idBadge {
     font-size: 0.75rem;
+    padding: 4px 10px;
   }
 
-  .tituloCell {
+  .denunciaCell {
     max-width: none;
   }
 
-  .titleText {
-    font-size: 0.875rem;
+  .denunciaContent {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .denunciaTitle {
+    font-size: 0.938rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    line-height: 1.4;
+  }
+
+  .denunciaDescripcion {
+    font-size: 0.813rem;
+    line-height: 1.6;
+    text-align: justify;
+    color: var(--color-gray-700);
+    padding: 4px 0;
+  }
+
+  .denunciaUbicacion {
+    font-size: 0.75rem;
+    color: var(--color-gray-500);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .categoriaTag {
+    font-size: 0.688rem;
+    padding: 4px 10px;
+    white-space: nowrap;
   }
 
   .estadoBadge {
@@ -1010,17 +1140,57 @@
     padding: 4px 10px;
   }
 
+  /* Fila de fecha con icono */
+  .fechaCell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--color-gray-500);
+    padding-top: 4px;
+    border-top: 1px solid var(--color-gray-100);
+  }
+
+  .fechaCell::before {
+    content: '📅';
+    font-size: 1rem;
+  }
+
   .actionButtons {
     width: 100%;
+    display: flex;
     justify-content: stretch;
+    gap: 8px;
+    padding-top: 4px;
   }
 
   .btnVer,
   .btnEstado,
   .btnArea {
     flex: 1;
-    padding: 10px 12px;
+    min-width: 0;
+    padding: 8px 12px;
     font-size: 0.75rem;
+    font-weight: 600;
+    background: white;
+    color: var(--color-gray-700);
+    border: 1px solid var(--color-gray-200);
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .btnVer:active,
+  .btnEstado:active,
+  .btnArea:active {
+    background: var(--color-gray-50);
+    border-color: var(--color-gray-300);
+  }
+
+  .btnVer svg,
+  .btnEstado svg,
+  .btnArea svg {
+    width: 14px;
+    height: 14px;
   }
 
   .pagination {
@@ -1039,26 +1209,81 @@
     font-size: 0.75rem;
   }
 
+  .modal {
+    align-items: flex-start;
+    padding: var(--spacing-md) var(--spacing-sm);
+    padding-top: 60px;
+  }
+
+  .modalContent {
+    max-width: 100%;
+    max-height: 85vh;
+    margin-top: 40px;
+    border-radius: 12px 12px 0 0;
+  }
+
   .modalHeader {
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
   }
 
   .modalTitle {
-    font-size: 1.25rem;
+    font-size: 1rem;
   }
 
   .modalBody {
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .modalInfo {
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .infoRow {
+    margin-bottom: var(--spacing-xs);
+    gap: var(--spacing-xs);
+  }
+
+  .infoLabel,
+  .infoValue {
+    font-size: 0.813rem;
+  }
+
+  .formGroup {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .formLabel {
+    font-size: 0.875rem;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .formSelect,
+  .formTextarea {
+    padding: 10px 12px;
+    font-size: 0.875rem;
+  }
+
+  .formTextarea {
+    min-height: 80px;
+  }
+
+  .charCount {
+    font-size: 0.688rem;
   }
 
   .modalFooter {
     flex-direction: column;
     gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-sm);
   }
 
   .btnCancelar,
   .btnGuardar {
     width: 100%;
     justify-content: center;
+    padding: 10px 16px;
+    font-size: 0.875rem;
   }
 }

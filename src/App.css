@@ -1,1 +1,30 @@
 /* Estilos de App */
+
+/* Variables de altura del header para cada breakpoint */
+:root {
+  --header-height: 72px;
+}
+
+/* Ajustar altura del header en diferentes pantallas */
+@media (max-width: 768px) {
+  :root {
+    --header-height: 64px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --header-height: 60px;
+  }
+}
+
+@media (max-width: 360px) {
+  :root {
+    --header-height: 56px;
+  }
+}
+
+/* Aplicar padding-top a todas las páginas para compensar el header fijo */
+body {
+  padding-top: var(--header-height);
+}

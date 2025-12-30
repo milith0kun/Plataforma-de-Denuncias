@@ -145,11 +145,12 @@ const Header = ({ variant }) => {
   const getNavItems = () => {
     if (esAutoridad) {
       return [
+
         { path: '/dashboard-autoridad', label: 'Dashboard', icon: 'dashboard' },
         { path: '/gestionar-denuncias', label: 'Gestionar Denuncias', icon: 'manage', primary: true },
         { path: '/denuncias', label: 'Todas las Denuncias', icon: 'list' },
         { path: '/mapa-denuncias', label: 'Mapa', icon: 'map' },
-        { path: '/estadisticas', label: 'Estadísticas', icon: 'reports' }
+
       ];
     }
 
