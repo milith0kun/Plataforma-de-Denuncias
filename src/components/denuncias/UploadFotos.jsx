@@ -7,11 +7,11 @@ const UploadFotos = ({ fotos, setFotos, maxFotos = 5 }) => {
   const fileInputRef = useRef(null);
 
   const validarArchivo = (file) => {
-    const tiposPermitidos = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+    const tiposPermitidos = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'image/svg+xml'];
     const tamañoMaximo = 5 * 1024 * 1024; // 5MB
 
     if (!tiposPermitidos.includes(file.type)) {
-      return 'Solo se permiten imágenes (JPG, PNG, WEBP)';
+      return 'Solo se permiten imágenes (JPG, PNG, WEBP, SVG)';
     }
 
     if (file.size > tamañoMaximo) {

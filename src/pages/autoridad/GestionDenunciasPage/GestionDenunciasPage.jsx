@@ -373,6 +373,8 @@ const GestionDenunciasPage = () => {
                                   src={obtenerUrlImagen(denuncia.evidencias)}
                                   alt={denuncia.titulo}
                                   className={styles.thumbnail}
+                                  loading="lazy"
+                                  decoding="async"
                                 />
                               ) : (
                                 <div className={styles.noImage}>

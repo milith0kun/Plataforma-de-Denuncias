@@ -263,6 +263,8 @@ const DenunciasPage = () => {
                       <img
                         src={imagenUrl}
                         alt={denuncia.titulo}
+                        loading="lazy"
+                        decoding="async"
                         onError={(e) => {
                           e.target.style.display = 'none';
                           e.target.nextSibling.style.display = 'flex';

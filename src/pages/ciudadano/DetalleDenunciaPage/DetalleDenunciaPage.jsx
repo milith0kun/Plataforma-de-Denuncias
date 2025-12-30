@@ -400,9 +400,11 @@ const DetalleDenunciaPage = () => {
                       onClick={() => abrirLightbox(index)}
                     >
                       <img
-                        src={obtenerUrlImagen(evidencia.url || evidencia.ruta)}
+                        src={obtenerUrlImagen(evidencia.url || evidencia.ruta || evidencia.url_archivo)}
                         alt={`Evidencia ${index + 1}`}
                         className={styles.evidenciaImg}
+                        loading={index < 2 ? "eager" : "lazy"}
+                        decoding="async"
                       />
                       <div className={styles.evidenciaOverlay}>
                         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -510,7 +512,9 @@ const DetalleDenunciaPage = () => {
       {/* Lightbox para evidencias */}
       {lightboxOpen && denuncia.evidencias && denuncia.evidencias.length > 0 && (
         <Lightbox
-          images={denuncia.evidencias.map(e => ({ url: obtenerUrlImagen(e.url || e.ruta) }))}
+          images={denuncia.evidencias.map(e => ({ 
+            url: obtenerUrlImagen(e.url || e.ruta || e.url_archivo) 
+          }))}
           initialIndex={lightboxIndex}
           onClose={() => setLightboxOpen(false)}
         />

@@ -67,6 +67,8 @@ const Lightbox = ({ images = [], initialIndex = 0, onClose }) => {
             alt={currentImage.descripcion || `Imagen ${currentIndex + 1}`}
             className={`${styles.image} ${isZoomed ? styles.zoomed : ''}`}
             onClick={toggleZoom}
+            loading="eager"
+            decoding="async"
           />
         </div>
 
@@ -109,6 +111,8 @@ const Lightbox = ({ images = [], initialIndex = 0, onClose }) => {
                 <img
                   src={img.url || img}
                   alt={`Miniatura ${index + 1}`}
+                  loading={index < 5 ? "eager" : "lazy"}
+                  decoding="async"
                 />
               </button>
             ))}
