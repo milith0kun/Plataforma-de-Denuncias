@@ -177,6 +177,8 @@
   /* slate-50 */
   --color-bg-tertiary: #f1f5f9;
   /* slate-100 */
+  --color-background: #f8fafc;
+  /* slate-50 - Background general de páginas */
   --color-border: #e2e8f0;
   /* slate-200 */
   --color-border-light: #f1f5f9;
@@ -250,6 +252,13 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+}
+
 body {
   font-family: var(--font-body);
   font-size: var(--font-size-base);
@@ -257,6 +266,12 @@ body {
   line-height: 1.6;
   color: var(--color-text-primary);
   background-color: var(--color-bg-primary);
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  width: 100%;
 }
 
 h1,

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link, useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
 import { useGoogleAuth } from '../../../hooks/useGoogleAuth';
-import { useNotification } from '../../../contexts/NotificationContext';
 import Input from '../../../components/common/Input/Input';
 import Button from '../../../components/common/Button/Button';
 import Alert from '../../../components/common/Alert/Alert';
@@ -22,7 +21,6 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { login, error, estaAutenticado, esAutoridad, esCiudadano, cargando: authCargando } = useAuth();
   const { loginWithGoogle, isConfigured, isGoogleLoaded } = useGoogleAuth();
-  const { showSuccess, showError, showWarning } = useNotification();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -30,7 +28,6 @@ const LoginPage = () => {
   const [errores, setErrores] = useState({});
   const [cargando, setCargando] = useState(false);
   const [googleError, setGoogleError] = useState('');
-
 
   // Mostrar loading global si se está verificando sesión
   if (authCargando) {
@@ -161,7 +158,6 @@ const LoginPage = () => {
     e.preventDefault();
 
     if (!validarFormulario()) {
-      showWarning('Por favor, completa todos los campos correctamente');
       return;
     }
 
@@ -173,9 +169,6 @@ const LoginPage = () => {
       const tipoUsuario = usuario?.tipo_usuario?.toLowerCase() || '';
       const esAutoridad = tipoUsuario.includes('autoridad') || usuario?.id_tipo_usuario === 2;
 
-      // Mostrar notificación de éxito
-      showSuccess(`¡Bienvenido${usuario?.nombres ? ', ' + usuario.nombres : ''}!`);
-
       if (esAutoridad) {
         navigate('/dashboard-autoridad');
       } else {
@@ -183,10 +176,6 @@ const LoginPage = () => {
       }
     } catch (error) {
       console.error('Error en login:', error);
-      // Mostrar notificación de error
-      const mensajeError = error.response?.data?.message || 'Error al iniciar sesión. Verifica tus credenciales.';
-      showError(mensajeError);
-
       // Verificar si el error indica que el usuario necesita Google
       if (error.response?.data?.requiresGoogle) {
         setGoogleError('Esta cuenta fue creada con Google. Por favor, usa el botón "Continuar con Google" para iniciar sesión.');

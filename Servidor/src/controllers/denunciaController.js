@@ -67,6 +67,44 @@ class DenunciaController {
       // Obtener la denuncia creada
       const denunciaCreada = await Denuncia.obtenerPorId(id_denuncia);
 
+      // Crear notificaciones (no bloquea si falla)
+      try {
+        const Notificacion = (await import('../models/Notificacion.js')).default;
+
+        // 1. Notificar al ciudadano sobre la creación exitosa
+        await Notificacion.crear({
+          id_usuario: id_usuario,
+          id_denuncia: id_denuncia,
+          titulo: 'Denuncia Registrada Exitosamente',
+          mensaje: `Tu denuncia "${titulo}" ha sido registrada. Te notificaremos sobre cualquier actualización.`,
+          tipo: 'SUCCESS'
+        });
+
+        // 2. Notificar a todas las autoridades sobre la nueva denuncia
+        const Usuario = (await import('../models/Usuario.js')).default;
+        const autoridades = await Usuario.find({
+          id_tipo_usuario: 2 // 2 = Autoridad
+        }).select('_id');
+
+        if (autoridades && autoridades.length > 0) {
+          // Crear notificaciones para cada autoridad en paralelo
+          const notificacionesAutoridades = autoridades.map(autoridad =>
+            Notificacion.crear({
+              id_usuario: autoridad._id,
+              id_denuncia: id_denuncia,
+              titulo: 'Nueva Denuncia Registrada',
+              mensaje: `Se ha registrado una nueva denuncia: "${titulo}" en la categoría ${categoria.nombre}${direccion_geolocalizada ? ` - ${direccion_geolocalizada}` : ''}.`,
+              tipo: 'INFO'
+            })
+          );
+
+          await Promise.all(notificacionesAutoridades);
+        }
+      } catch (notifError) {
+        // No lanzar error - la denuncia ya se creó exitosamente
+        console.error('Error al crear notificaciones:', notifError);
+      }
+
       res.status(201).json({
         success: true,
         message: MENSAJES_EXITO.DENUNCIA_CREADA || 'Denuncia registrada exitosamente',

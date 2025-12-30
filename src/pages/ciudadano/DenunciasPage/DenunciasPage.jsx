@@ -3,12 +3,75 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../../../components/common/Header/Header';
 import BottomNavigation from '../../../components/common/BottomNavigation/BottomNavigation';
 import { useIsMobile } from '../../../hooks/useIsMobile';
+import { useAuth } from '../../../hooks/useAuth';
 import denunciaService from '../../../services/denunciaService';
+import { BASE_URL } from '../../../services/api';
 import styles from './DenunciasPage.module.css';
+
+// Iconos SVG minimalistas
+const CalendarIcon = () => (
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+    <line x1="16" y1="2" x2="16" y2="6"></line>
+    <line x1="8" y1="2" x2="8" y2="6"></line>
+    <line x1="3" y1="10" x2="21" y2="10"></line>
+  </svg>
+);
+
+const MapPinIcon = () => (
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+    <circle cx="12" cy="10" r="3"></circle>
+  </svg>
+);
+
+const TagIcon = () => (
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+    <line x1="7" y1="7" x2="7.01" y2="7"></line>
+  </svg>
+);
+
+const ClipboardIcon = () => (
+  <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+    <line x1="8" y1="10" x2="16" y2="10"></line>
+    <line x1="8" y1="14" x2="16" y2="14"></line>
+    <line x1="8" y1="18" x2="12" y2="18"></line>
+  </svg>
+);
+
+const ArrowRightIcon = () => (
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="5" y1="12" x2="19" y2="12"></line>
+    <polyline points="12 5 19 12 12 19"></polyline>
+  </svg>
+);
+
+const ImagePlaceholderIcon = () => (
+  <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+    <polyline points="21 15 16 10 5 21"></polyline>
+  </svg>
+);
+
+// Función para obtener URL de imagen
+const obtenerUrlImagen = (evidencias) => {
+  if (!evidencias || evidencias.length === 0) return null;
+  const foto = evidencias.find(e => e.tipo_evidencia === 'Foto');
+  if (!foto || !foto.url_archivo) return null;
+
+  const url = foto.url_archivo;
+  if (url.startsWith('http')) return url;
+  return `${BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+};
 
 const DenunciasPage = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { esAutoridad } = useAuth();
   const [filtroEstado, setFiltroEstado] = useState('todas');
   const [denuncias, setDenuncias] = useState([]);
   const [cargando, setCargando] = useState(true);
@@ -44,10 +107,12 @@ const DenunciasPage = () => {
   // Mapear estados de la BD a los filtros
   const mapearEstadoAFiltro = (estadoNombre) => {
     if (!estadoNombre) return 'pendiente';
-    const estado = estadoNombre.toLowerCase().replace(/\s+/g, '');
-    if (estado === 'registrada' || estado === 'enrevision') return 'pendiente';
-    if (estado === 'asignada' || estado === 'enproceso') return 'enproceso';
-    if (estado === 'resuelta' || estado === 'cerrada') return 'resuelta';
+    // Normalizar: minúsculas, sin acentos
+    const estado = estadoNombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '');
+
+    if (['registrada', 'enrevision'].includes(estado)) return 'pendiente';
+    if (['asignada', 'enproceso'].includes(estado)) return 'enproceso';
+    if (['resuelta', 'cerrada', 'rechazada'].includes(estado)) return 'resuelta';
     return 'pendiente';
   };
 
@@ -57,17 +122,15 @@ const DenunciasPage = () => {
     : denuncias.filter(denuncia => mapearEstadoAFiltro(denuncia.estado_nombre) === filtroEstado);
 
   // Función para obtener el color del estado
-  const obtenerColorEstado = (estado) => {
-    switch (estado.toLowerCase().replace(' ', '')) {
-      case 'pendiente':
-        return styles.estadoPendiente;
-      case 'enproceso':
-        return styles.estadoProceso;
-      case 'resuelta':
-        return styles.estadoResuelta;
-      default:
-        return '';
-    }
+  const obtenerColorEstado = (estadoNombre) => {
+    if (!estadoNombre) return '';
+    const estado = estadoNombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '');
+
+    if (['registrada', 'enrevision', 'pendiente'].includes(estado)) return styles.estadoPendiente;
+    if (['asignada', 'enproceso'].includes(estado)) return styles.estadoProceso;
+    if (['resuelta', 'cerrada', 'rechazada'].includes(estado)) return styles.estadoResuelta;
+
+    return styles.estadoPendiente;
   };
 
   // Función para obtener el color de la prioridad
@@ -144,7 +207,7 @@ const DenunciasPage = () => {
         <div className={styles.filtros}>
           <div className={styles.filtroGroup}>
             <label className={styles.filtroLabel}>Filtrar por estado:</label>
-            <select 
+            <select
               className={styles.filtroSelect}
               value={filtroEstado}
               onChange={(e) => setFiltroEstado(e.target.value)}
@@ -155,7 +218,7 @@ const DenunciasPage = () => {
               <option value="resuelta">Resueltas</option>
             </select>
           </div>
-          
+
           <div className={styles.estadisticas}>
             <div className={styles.estadistica}>
               <span className={styles.estadisticaNumero}>{denuncias.length}</span>
@@ -181,65 +244,73 @@ const DenunciasPage = () => {
             </div>
           </div>
         </div>
-
         {/* Lista de denuncias */}
         <div className={styles.denunciasList}>
           {denunciasFiltradas.length > 0 ? (
-            denunciasFiltradas.map((denuncia) => (
-              <div key={denuncia.id_denuncia} className={styles.denunciaCard}>
-                <div className={styles.denunciaHeader}>
-                  <div className={styles.denunciaInfo}>
-                    <h3 className={styles.denunciaTitle}>{denuncia.titulo}</h3>
-                    <p className={styles.denunciaDescripcion}>
-                      {denuncia.descripcion_detallada?.substring(0, 150)}
-                      {denuncia.descripcion_detallada?.length > 150 ? '...' : ''}
-                    </p>
-                  </div>
-                  <div className={styles.denunciaEstados}>
+            denunciasFiltradas.map((denuncia) => {
+              const imagenUrl = obtenerUrlImagen(denuncia.evidencias);
+
+              return (
+                <div
+                  key={denuncia.id_denuncia}
+                  className={styles.denunciaCard}
+                  onClick={() => navigate(`/denuncias/${denuncia.id_denuncia}`)}
+                >
+                  {/* Imagen o placeholder */}
+                  <div className={styles.cardImage}>
+                    {imagenUrl ? (
+                      <img
+                        src={imagenUrl}
+                        alt={denuncia.titulo}
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <div className={styles.imagePlaceholder} style={{ display: imagenUrl ? 'none' : 'flex' }}>
+                      <ImagePlaceholderIcon />
+                    </div>
+                    {/* Badge de estado sobre la imagen */}
                     <span className={`${styles.estado} ${obtenerColorEstado(denuncia.estado_nombre)}`}>
                       {denuncia.estado_nombre}
                     </span>
                   </div>
-                </div>
 
-                <div className={styles.denunciaDetails}>
-                  <div className={styles.detailItem} key={`fecha-${denuncia.id_denuncia}`}>
-                    <span className={styles.detailIcon}>📅</span>
-                    <span className={styles.detailText}>{formatearFecha(denuncia.fecha_registro)}</span>
-                  </div>
-                  <div className={styles.detailItem} key={`dir-${denuncia.id_denuncia}`}>
-                    <span className={styles.detailIcon}>📍</span>
-                    <span className={styles.detailText}>
-                      {denuncia.direccion_geolocalizada || 'Ubicación no especificada'}
-                    </span>
-                  </div>
-                  <div className={styles.detailItem} key={`cat-${denuncia.id_denuncia}`}>
-                    <span className={styles.detailIcon}>🏷️</span>
-                    <span className={styles.detailText}>{denuncia.categoria_nombre}</span>
-                  </div>
-                </div>
+                  {/* Contenido */}
+                  <div className={styles.cardBody}>
+                    <h3 className={styles.denunciaTitle}>{denuncia.titulo}</h3>
+                    <p className={styles.denunciaDescripcion}>
+                      {denuncia.descripcion_detallada?.substring(0, 80)}
+                      {denuncia.descripcion_detallada?.length > 80 ? '...' : ''}
+                    </p>
 
-                <div className={styles.denunciaActions}>
-                  <button
-                    className={styles.actionBtn}
-                    onClick={() => navigate(`/denuncias/${denuncia.id_denuncia}`)}
-                  >
-                    Ver Detalles
-                  </button>
+                    {/* Meta info */}
+                    <div className={styles.cardMeta}>
+                      <span className={styles.metaItem}>
+                        <CalendarIcon />
+                        {formatearFecha(denuncia.fecha_registro)}
+                      </span>
+                      <span className={styles.metaItem}>
+                        <TagIcon />
+                        {denuncia.categoria_nombre}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <div className={styles.emptyState}>
-              <div className={styles.emptyIcon}>📋</div>
+              <div className={styles.emptyIcon}><ClipboardIcon /></div>
               <h3 className={styles.emptyTitle}>No hay denuncias</h3>
               <p className={styles.emptyText}>
-                {filtroEstado === 'todas' 
+                {filtroEstado === 'todas'
                   ? 'Aún no has realizado ninguna denuncia.'
                   : `No tienes denuncias con estado "${filtroEstado}".`
                 }
               </p>
-              <button 
+              <button
                 className={styles.emptyAction}
                 onClick={() => navigate('/nueva-denuncia')}
               >
@@ -249,7 +320,7 @@ const DenunciasPage = () => {
           )}
         </div>
       </div>
-      {isMobile && <BottomNavigation userType="ciudadano" />}
+      {isMobile && <BottomNavigation userType={esAutoridad ? "autoridad" : "ciudadano"} />}
     </div>
   );
 };

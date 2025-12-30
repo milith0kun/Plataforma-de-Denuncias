@@ -77,9 +77,16 @@ const GestionDenunciasPage = () => {
     });
   };
 
+  const formatearIdDenuncia = (idDenuncia) => {
+    if (!idDenuncia) return '';
+    // Convertir ObjectId a número secuencial simple
+    const hash = idDenuncia.toString().split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return (1000 + (hash % 9000)).toString();
+  };
+
   const obtenerColorEstado = (estadoNombre) => {
     if (!estadoNombre) return styles.estadoPendiente;
-    const estado = estadoNombre.toLowerCase().replace(/\s+/g, '');
+    const estado = estadoNombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '');
 
     const mapeo = {
       'registrada': styles.estadoRegistrada,
@@ -330,76 +337,84 @@ const GestionDenunciasPage = () => {
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th>Título</th>
+                      <th>Denuncia</th>
                       <th>Categoría</th>
                       <th>Estado</th>
                       <th>Fecha</th>
-                      <th>Ubicación</th>
                       <th>Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {denunciasPaginadas.map((denuncia, index) => (
-                      <tr key={denuncia.id_denuncia} className={index % 2 === 0 ? styles.evenRow : styles.oddRow}>
-                        <td className={styles.idCell}>
-                          <span className={styles.idBadge}>#{denuncia.id_denuncia}</span>
-                        </td>
-                        <td className={styles.tituloCell}>
-                          <div className={styles.titleWrapper}>
-                            <span className={styles.titleText}>{denuncia.titulo}</span>
-                          </div>
-                        </td>
-                        <td>
-                          <span className={styles.categoriaTag}>
-                            {denuncia.categoria_nombre}
-                          </span>
-                        </td>
-                        <td>
-                          <span className={`${styles.estadoBadge} ${obtenerColorEstado(denuncia.estado_nombre)}`}>
-                            {denuncia.estado_nombre}
-                          </span>
-                        </td>
-                        <td className={styles.fechaCell}>{formatearFecha(denuncia.fecha_registro)}</td>
-                        <td className={styles.ubicacionCell}>
-                          {denuncia.direccion_geolocalizada || 'No especificada'}
-                        </td>
-                        <td>
-                          <div className={styles.actionButtons}>
-                            <button
-                              className={styles.btnVer}
-                              onClick={() => navigate(`/denuncias/${denuncia.id_denuncia}`)}
-                              title="Ver detalles"
-                            >
-                              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                              </svg>
-                              Ver
-                            </button>
-                            <button
-                              className={styles.btnEstado}
-                              onClick={() => abrirModalCambiarEstado(denuncia)}
-                              title="Cambiar estado"
-                            >
-                              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                              </svg>
-                              Estado
-                            </button>
-                            <button
-                              className={styles.btnArea}
-                              onClick={() => abrirModalAsignarArea(denuncia)}
-                              title="Asignar área"
-                            >
-                              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                              </svg>
-                              Área
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                    {denunciasPaginadas.map((denuncia, index) => {
+                      return (
+                        <tr key={denuncia.id_denuncia} className={index % 2 === 0 ? styles.evenRow : styles.oddRow}>
+                          <td className={styles.idCell}>
+                            <span className={styles.idBadge}>{formatearIdDenuncia(denuncia.id_denuncia)}</span>
+                          </td>
+                          <td className={styles.denunciaCell}>
+                            <div className={styles.denunciaContent}>
+                              <div className={styles.denunciaTitle}>{denuncia.titulo}</div>
+                              {denuncia.descripcion && (
+                                <div className={styles.denunciaDescripcion}>
+                                  {denuncia.descripcion.length > 120
+                                    ? `${denuncia.descripcion.substring(0, 120)}...`
+                                    : denuncia.descripcion}
+                                </div>
+                              )}
+                              <div className={styles.denunciaUbicacion}>
+                                📍 {denuncia.direccion_geolocalizada || 'Sin ubicación'}
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <span className={styles.categoriaTag}>
+                              {denuncia.categoria_nombre}
+                            </span>
+                          </td>
+                          <td>
+                            <span className={`${styles.estadoBadge} ${obtenerColorEstado(denuncia.estado_nombre)}`}>
+                              {denuncia.estado_nombre}
+                            </span>
+                          </td>
+                          <td className={styles.fechaCell}>{formatearFecha(denuncia.fecha_registro)}</td>
+                          <td>
+                            <div className={styles.actionButtons}>
+                              <button
+                                className={styles.btnVer}
+                                onClick={() => navigate(`/denuncias/${denuncia.id_denuncia}`)}
+                                title="Ver detalles completos"
+                              >
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                <span>Detalles</span>
+                              </button>
+                              <button
+                                className={styles.btnEstado}
+                                onClick={() => abrirModalCambiarEstado(denuncia)}
+                                title="Cambiar estado de la denuncia"
+                              >
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                                <span>Cambiar</span>
+                              </button>
+                              <button
+                                className={styles.btnArea}
+                                onClick={() => abrirModalAsignarArea(denuncia)}
+                                title="Asignar a un área específica"
+                              >
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                <span>Asignar</span>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -422,8 +437,8 @@ const GestionDenunciasPage = () => {
                     {Array.from({ length: totalPaginas }, (_, i) => i + 1)
                       .filter(num => {
                         return num === 1 ||
-                               num === totalPaginas ||
-                               Math.abs(num - paginaActual) <= 1;
+                          num === totalPaginas ||
+                          Math.abs(num - paginaActual) <= 1;
                       })
                       .map((num, index, array) => (
                         <React.Fragment key={num}>

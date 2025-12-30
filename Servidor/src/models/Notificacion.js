@@ -39,9 +39,9 @@ const notificacionSchema = new mongoose.Schema({
     collection: 'notificaciones'
 });
 
-// Índices
-// notificacionSchema.index({ id_usuario: 1, leida: 1 });
-// notificacionSchema.index({ fecha_creacion: -1 });
+// Índices para optimizar consultas
+notificacionSchema.index({ id_usuario: 1, leida: 1 });
+notificacionSchema.index({ fecha_creacion: -1 });
 
 // Métodos estáticos
 notificacionSchema.statics.crear = async function (datos) {

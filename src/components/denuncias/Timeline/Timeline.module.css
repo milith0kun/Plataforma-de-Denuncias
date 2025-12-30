@@ -1,6 +1,9 @@
 .timeline {
   position: relative;
   padding-left: var(--spacing-lg);
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .timeline::before {
@@ -20,6 +23,8 @@
   display: flex;
   gap: var(--spacing-lg);
   margin-bottom: var(--spacing-2xl);
+  width: 100%;
+  max-width: 100%;
 }
 
 .timelineItem:last-child {
@@ -58,6 +63,10 @@
   padding: var(--spacing-lg);
   box-shadow: var(--shadow-sm);
   transition: all 0.2s ease;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .timelineContent:hover {
@@ -78,6 +87,8 @@
   font-weight: 600;
   color: var(--color-gray-900);
   margin: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .timelineDate {
@@ -95,6 +106,9 @@
   background: var(--color-gray-50);
   border-radius: 6px;
   border-left: 3px solid var(--color-primary-light);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .timelineUser {
@@ -180,11 +194,15 @@
 /* Responsive */
 @media (max-width: 768px) {
   .timeline {
-    padding-left: 0;
+    padding-left: var(--spacing-md);
   }
 
   .timeline::before {
-    left: 16px;
+    left: 14px;
+  }
+
+  .timelineItem {
+    gap: var(--spacing-md);
   }
 
   .timelineMarker {
@@ -196,9 +214,14 @@
     font-size: 1rem;
   }
 
+  .timelineContent {
+    padding: var(--spacing-md);
+  }
+
   .timelineHeader {
     flex-direction: column;
     gap: var(--spacing-xs);
+    align-items: flex-start;
   }
 
   .timelineTitle {
@@ -207,27 +230,28 @@
 
   .timelineDate {
     font-size: 0.75rem;
+    white-space: normal;
   }
 }
 
 /* Extra small screens */
 @media (max-width: 480px) {
   .timeline {
-    padding-left: 0;
+    padding-left: var(--spacing-sm);
   }
 
   .timeline::before {
-    left: 14px;
+    left: 12px;
   }
 
   .timelineItem {
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
     margin-bottom: var(--spacing-lg);
   }
 
   .timelineMarker {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     border-width: 2px;
   }
 
@@ -236,11 +260,16 @@
   }
 
   .timelineContent {
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
+  }
+
+  .timelineHeader {
+    gap: 4px;
   }
 
   .timelineTitle {
     font-size: 0.875rem;
+    line-height: 1.4;
   }
 
   .timelineDate {
@@ -250,9 +279,12 @@
   .timelineComment {
     padding: var(--spacing-sm);
     font-size: 0.813rem;
+    margin-top: var(--spacing-sm);
   }
 
   .timelineUser {
     font-size: 0.75rem;
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-sm);
   }
 }

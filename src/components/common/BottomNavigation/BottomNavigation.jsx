@@ -55,30 +55,31 @@ const BottomNavigation = ({ userType = 'ciudadano' }) => {
 
   // Configuración de navegación para autoridades
   const autoridadNavItems = [
+
     {
       path: '/dashboard-autoridad',
       icon: LayoutDashboard,
-      label: 'Dashboard',
+      label: 'Inicio',
       color: '#3b82f6'
-    },
-    {
-      path: '/gestionar-denuncias',
-      icon: Settings,
-      label: 'Gestionar',
-      color: '#8b5cf6',
-      isMain: true
     },
     {
       path: '/denuncias',
       icon: FileText,
       label: 'Denuncias',
-      color: '#10b981'
+      color: '#64748b'
     },
     {
-      path: '/estadisticas',
-      icon: BarChart3,
-      label: 'Reportes',
-      color: '#f59e0b'
+      path: '/gestionar-denuncias',
+      icon: FileText,
+      label: 'Gestionar',
+      color: '#8b5cf6',
+      isMain: true
+    },
+    {
+      path: '/mapa-denuncias',
+      icon: MapPin,
+      label: 'Mapa',
+      color: '#10b981'
     },
     {
       path: '/perfil',

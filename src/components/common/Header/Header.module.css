@@ -782,16 +782,22 @@
   }
 
   .logoTextContainer {
-    display: none;
+    display: flex;
+  }
+
+  .logoTextTop,
+  .logoTextBottom {
+    font-size: 0.75rem;
+    font-weight: 600;
   }
 
   .logo {
-    gap: 0;
+    gap: 6px;
   }
 
   .logoImg {
-    width: 34px;
-    height: 34px;
+    width: 28px;
+    height: 28px;
   }
 
   .mobileMenuBtn {

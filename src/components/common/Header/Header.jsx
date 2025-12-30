@@ -145,21 +145,21 @@ const Header = ({ variant }) => {
   const getNavItems = () => {
     if (esAutoridad) {
       return [
+
         { path: '/dashboard-autoridad', label: 'Dashboard', icon: 'dashboard' },
         { path: '/gestionar-denuncias', label: 'Gestionar Denuncias', icon: 'manage', primary: true },
         { path: '/denuncias', label: 'Todas las Denuncias', icon: 'list' },
         { path: '/mapa-denuncias', label: 'Mapa', icon: 'map' },
-        { path: '/estadisticas', label: 'Estadísticas', icon: 'reports' }
+
       ];
     }
 
     if (esCiudadano) {
       return [
         { path: '/home', label: 'Dashboard', icon: 'dashboard' },
-        { path: '/nueva-denuncia', label: 'Nueva Denuncia', icon: 'plus', primary: true },
         { path: '/denuncias', label: 'Mis Denuncias', icon: 'list' },
-        { path: '/seguimiento', label: 'Seguimiento', icon: 'track' },
-        { path: '/mapa-denuncias', label: 'Mapa', icon: 'map' }
+        { path: '/nueva-denuncia', label: 'Nueva Denuncia', icon: 'plus', primary: true },
+        { path: '/seguimiento', label: 'Seguimiento', icon: 'track' }
       ];
     }
 

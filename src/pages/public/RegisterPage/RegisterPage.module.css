@@ -5,6 +5,8 @@
   justify-content: center;
   background: #f8fafc;
   padding: 2rem 1rem;
+  padding-top: 100px;
+  /* Compensación para header fijo */
 }
 
 .register-card {

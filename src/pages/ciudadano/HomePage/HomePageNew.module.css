@@ -1,6 +1,6 @@
 /* =============================================================================
-   Dashboard Ciudadano - Estilos Profesionales
-   Diseño limpio y moderno manteniendo la paleta original
+   Dashboard Ciudadano - Estilos Responsivos
+   Diseño mobile-first con soporte completo para todos los dispositivos
 ============================================================================= */
 
 /* Container Principal */
@@ -8,10 +8,14 @@
   display: flex;
   min-height: 100vh;
   background: #f8fafc;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* =============================================================================
-   SIDEBAR
+   SIDEBAR (Solo Desktop)
 ============================================================================= */
 .sidebar {
   width: 240px;
@@ -21,7 +25,7 @@
   position: fixed;
   left: 0;
   top: 72px;
-  transition: width 0.3s ease, transform 0.3s ease;
+  transition: width 0.3s ease;
   z-index: 100;
   display: flex;
   flex-direction: column;
@@ -104,13 +108,18 @@
   flex: 1;
   margin-left: 240px;
   padding: 20px 24px;
+  padding-top: 30px;
+  /* Compensación para header fijo */
   transition: margin-left 0.3s ease;
-  min-height: calc(100vh - 72px);
-  margin-top: 72px;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .sidebar:not(.open)~.mainContent {
-  margin-left: 64px;
+  margin-left: 72px;
 }
 
 /* =============================================================================
@@ -118,44 +127,55 @@
 ============================================================================= */
 .heroSection {
   background: white;
-  border-radius: 16px;
-  padding: 28px 32px;
-  margin-bottom: 24px;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   border: 1px solid #e2e8f0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .heroContent {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.heroLeft {
+  flex: 1;
+  min-width: 0;
 }
 
 .heroLeft h1 {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #0f172a;
-  margin-bottom: 6px;
+  margin: 0 0 6px 0;
   letter-spacing: -0.025em;
+  word-wrap: break-word;
 }
 
 .heroLeft p {
   color: #64748b;
-  font-size: 0.95rem;
-  margin-bottom: 20px;
+  font-size: 0.9rem;
+  margin: 0 0 16px 0;
+  word-wrap: break-word;
 }
 
 .heroActions {
   display: flex;
-  gap: 12px;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .btnPrimary {
   background: #3b82f6;
   color: white;
   border: none;
-  padding: 11px 20px;
+  padding: 10px 18px;
   border-radius: 8px;
   font-weight: 600;
   display: inline-flex;
@@ -164,21 +184,18 @@
   cursor: pointer;
   transition: all 0.15s ease;
   font-size: 0.875rem;
+  white-space: nowrap;
 }
 
 .btnPrimary:hover {
   background: #2563eb;
 }
 
-.btnPrimary:active {
-  transform: scale(0.98);
-}
-
 .btnSecondary {
   background: white;
   color: #3b82f6;
   border: 1px solid #3b82f6;
-  padding: 11px 20px;
+  padding: 10px 18px;
   border-radius: 8px;
   font-weight: 600;
   display: inline-flex;
@@ -187,6 +204,7 @@
   cursor: pointer;
   transition: all 0.15s ease;
   font-size: 0.875rem;
+  white-space: nowrap;
 }
 
 .btnSecondary:hover {
@@ -194,22 +212,25 @@
 }
 
 /* =============================================================================
-   METRICS GRID
+   METRICS GRID - Responsivo
 ============================================================================= */
 .metricsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  margin-bottom: 24px;
+  gap: 12px;
+  margin-bottom: 16px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .metricCard {
   background: white;
-  border-radius: 12px;
-  padding: 20px 24px;
+  border-radius: 8px;
+  padding: 10px 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   border: 1px solid #e2e8f0;
   transition: box-shadow 0.2s ease;
+  min-width: 0;
 }
 
 .metricCard:hover {
@@ -220,12 +241,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 
 .metricHeader svg {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
 .metricCard[data-type="primary"] .metricHeader svg {
@@ -245,7 +267,7 @@
 }
 
 .metricLabel {
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   color: #64748b;
   font-weight: 600;
   text-transform: uppercase;
@@ -253,41 +275,44 @@
 }
 
 .metricValue {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #0f172a;
-  margin-bottom: 4px;
+  margin: 0 0 2px 0;
   line-height: 1.1;
 }
 
 .metricChange {
-  font-size: 0.8125rem;
+  font-size: 0.7rem;
   color: #64748b;
+  margin: 0;
 }
 
 /* =============================================================================
-   QUICK ACTIONS GRID
+   QUICK ACTIONS GRID - Responsivo
 ============================================================================= */
 .quickActionsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  margin-bottom: 24px;
+  gap: 12px;
+  margin-bottom: 16px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .actionCard {
   background: white;
-  border-radius: 12px;
-  padding: 24px;
+  border-radius: 8px;
+  padding: 12px 14px;
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   border: 1px solid #e2e8f0;
-  position: relative;
+  min-width: 0;
 }
 
 .actionCard:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
 
@@ -308,13 +333,13 @@
 }
 
 .actionCardIcon {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 }
 
 .actionCard.primary .actionCardIcon {
@@ -338,26 +363,26 @@
 }
 
 .actionCardIcon svg {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
 }
 
 .actionCardTitle {
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 600;
   color: #0f172a;
-  margin-bottom: 6px;
+  margin: 0 0 3px 0;
 }
 
 .actionCardDesc {
-  font-size: 0.8125rem;
+  font-size: 0.7rem;
   color: #64748b;
-  line-height: 1.5;
-  margin-bottom: 12px;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
 }
 
 .actionCardArrow {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   color: #cbd5e1;
   transition: transform 0.2s ease, color 0.2s ease;
 }
@@ -368,35 +393,42 @@
 }
 
 /* =============================================================================
-   TABLE CARD
+   TABLE CARD - Responsivo
 ============================================================================= */
 .tableCard {
   background: white;
   border-radius: 12px;
-  padding: 24px;
+  padding: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   border: 1px solid #e2e8f0;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .tableHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .tableTitle {
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #0f172a;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  margin: 0;
 }
 
 .tableTitle svg {
   color: #64748b;
+  flex-shrink: 0;
 }
 
 .viewAllLink {
@@ -406,7 +438,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   transition: gap 0.2s ease;
 }
 
@@ -416,11 +448,14 @@
 
 .tableWrapper {
   overflow-x: auto;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 500px;
 }
 
 .table thead {
@@ -428,21 +463,22 @@
 }
 
 .table th {
-  padding: 12px 16px;
+  padding: 10px 12px;
   text-align: left;
   font-weight: 600;
   color: #475569;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
 }
 
 .table td {
-  padding: 14px 16px;
+  padding: 12px;
   border-bottom: 1px solid #f1f5f9;
   color: #334155;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
 }
 
 .table tbody tr:hover {
@@ -455,36 +491,39 @@
 
 .statusBadge {
   display: inline-block;
-  padding: 5px 12px;
+  padding: 4px 10px;
   border-radius: 100px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: white;
+  white-space: nowrap;
 }
 
 .categoryBadge {
   display: inline-block;
-  padding: 5px 12px;
+  padding: 4px 10px;
   border-radius: 6px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 500;
   background: #f1f5f9;
   color: #475569;
+  white-space: nowrap;
 }
 
 .actionButton {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  padding: 7px 14px;
+  padding: 6px 12px;
   border-radius: 6px;
   font-weight: 500;
   color: #3b82f6;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   transition: all 0.15s ease;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
 }
 
 .actionButton:hover {
@@ -495,19 +534,20 @@
 /* Empty State */
 .emptyState {
   text-align: center;
-  padding: 48px 24px;
+  padding: 40px 20px;
   color: #94a3b8;
 }
 
 .emptyState svg {
-  width: 56px;
-  height: 56px;
-  margin-bottom: 16px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
   opacity: 0.5;
 }
 
 .emptyState p {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
+  margin: 0;
 }
 
 /* Loading State */
@@ -516,19 +556,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 64px;
+  padding: 48px 24px;
   color: #64748b;
   min-height: 50vh;
 }
 
 .spinner {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border: 3px solid #e2e8f0;
   border-top-color: #3b82f6;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 @keyframes spin {
@@ -538,17 +578,10 @@
 }
 
 /* =============================================================================
-   RESPONSIVE DESIGN
+   RESPONSIVE DESIGN - Mobile First
 ============================================================================= */
 
-@media (max-width: 1280px) {
-
-  .metricsGrid,
-  .quickActionsGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
+/* Tablets pequeñas y móviles grandes */
 @media (max-width: 1024px) {
   .sidebar {
     display: none;
@@ -557,21 +590,8 @@
   .mainContent {
     margin-left: 0;
     padding: 16px;
-    margin-top: 64px;
-    padding-bottom: 100px;
-  }
-}
-
-@media (max-width: 768px) {
-  .mainContent {
-    padding: 14px;
-    margin-top: 64px;
-    padding-bottom: 110px;
-  }
-
-  .heroSection {
-    padding: 20px;
-    border-radius: 12px;
+    padding-top: 30px;
+    padding-bottom: 120px;
   }
 
   .heroContent {
@@ -579,55 +599,27 @@
     text-align: center;
   }
 
-  .heroLeft h1 {
-    font-size: 1.5rem;
-  }
-
-  .heroActions {
-    flex-direction: column;
+  .heroLeft {
     width: 100%;
   }
 
-  .heroActions button {
+  .heroActions {
     width: 100%;
     justify-content: center;
   }
 
   .metricsGrid,
   .quickActionsGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
-  }
-
-  .metricCard,
-  .actionCard {
-    padding: 16px 20px;
-  }
-
-  .metricValue {
-    font-size: 1.75rem;
-  }
-
-  .tableCard {
-    padding: 16px;
-    border-radius: 12px;
-  }
-
-  .table {
-    min-width: 560px;
-  }
-
-  .table th,
-  .table td {
-    padding: 10px 12px;
-    font-size: 0.8125rem;
   }
 }
 
-@media (max-width: 480px) {
+/* Móviles */
+@media (max-width: 768px) {
   .mainContent {
     padding: 12px;
-    margin-top: 60px;
+    padding-top: 25px;
     padding-bottom: 100px;
   }
 
@@ -641,17 +633,27 @@
   }
 
   .heroLeft p {
-    font-size: 0.875rem;
+    font-size: 0.8rem;
+    margin-bottom: 12px;
   }
 
-  .btnPrimary,
-  .btnSecondary {
-    padding: 10px 16px;
-    font-size: 0.8125rem;
+  .heroActions {
+    flex-direction: column;
   }
 
-  .metricCard {
-    padding: 14px 16px;
+  .heroActions button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .metricsGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .quickActionsGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
   }
 
   .metricValue {
@@ -659,33 +661,115 @@
   }
 
   .metricLabel {
-    font-size: 0.6875rem;
-  }
-
-  .actionCard {
-    padding: 16px;
+    font-size: 0.65rem;
   }
 
   .actionCardIcon {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 12px;
+    width: 38px;
+    height: 38px;
+    margin-bottom: 10px;
+  }
+
+  .actionCardIcon svg {
+    width: 18px;
+    height: 18px;
   }
 
   .actionCardTitle {
-    font-size: 0.9375rem;
+    font-size: 0.85rem;
   }
 
   .actionCardDesc {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+    margin-bottom: 8px;
+  }
+
+  .tableCard {
+    padding: 12px;
   }
 
   .tableTitle {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 }
 
-/* Ocultar elementos innecesarios en móvil */
+/* Móviles pequeños */
+@media (max-width: 480px) {
+  .mainContent {
+    padding: 10px;
+    padding-top: 20px;
+    padding-bottom: 90px;
+  }
+
+  .heroSection {
+    padding: 14px;
+  }
+
+  .heroLeft h1 {
+    font-size: 1.125rem;
+  }
+
+  .heroLeft p {
+    font-size: 0.75rem;
+  }
+
+  .btnPrimary,
+  .btnSecondary {
+    padding: 10px 14px;
+    font-size: 0.8rem;
+  }
+
+  .metricsGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .metricCard {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .metricHeader {
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .metricHeader svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .metricValue {
+    font-size: 1.375rem;
+  }
+
+  .quickActionsGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .actionCard {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .actionCardIcon {
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .tableCard {
+    padding: 10px;
+  }
+
+  .tableTitle {
+    font-size: 0.85rem;
+  }
+}
+
+/* Ocultar elementos innecesarios */
 .backdrop,
 .floatingMenuButton {
   display: none;

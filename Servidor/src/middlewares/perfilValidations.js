@@ -11,7 +11,7 @@ export const validarActualizacionPerfil = [
     .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
     .withMessage('Los nombres solo pueden contener letras y espacios')
     .trim(),
-  
+
   body('apellidos')
     .notEmpty()
     .withMessage('Los apellidos son obligatorios')
@@ -20,14 +20,14 @@ export const validarActualizacionPerfil = [
     .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
     .withMessage('Los apellidos solo pueden contener letras y espacios')
     .trim(),
-  
+
   body('telefono')
     .optional({ nullable: true, checkFalsy: true })
     .isMobilePhone('es-CO')
     .withMessage('El teléfono debe tener un formato válido colombiano')
     .isLength({ min: 10, max: 10 })
     .withMessage('El teléfono debe tener exactamente 10 dígitos'),
-  
+
   body('direccion')
     .optional({ nullable: true, checkFalsy: true })
     .isLength({ max: 200 })
@@ -42,7 +42,7 @@ export const validarActualizacionPerfil = [
     .normalizeEmail()
     .custom(async (email, { req }) => {
       if (email) {
-        const emailExiste = await Usuario.emailExisteParaOtroUsuario(email, req.user.id);
+        const emailExiste = await Usuario.emailExisteParaOtroUsuario(email, req.usuario.id);
         if (emailExiste) {
           throw new Error('Este email ya está en uso por otro usuario');
         }
@@ -59,7 +59,7 @@ export const validarActualizacionPerfil = [
     .withMessage('El número de documento solo puede contener letras y números')
     .custom(async (documento, { req }) => {
       if (documento) {
-        const documentoExiste = await Usuario.documentoExisteParaOtroUsuario(documento, req.user.id);
+        const documentoExiste = await Usuario.documentoExisteParaOtroUsuario(documento, req.usuario.id);
         if (documentoExiste) {
           throw new Error('Este número de documento ya está en uso por otro usuario');
         }
@@ -73,13 +73,13 @@ export const validarCambioPassword = [
   body('password_actual')
     .notEmpty()
     .withMessage('La contraseña actual es obligatoria'),
-  
+
   body('password_nuevo')
     .isLength({ min: 8, max: 128 })
     .withMessage('La nueva contraseña debe tener entre 8 y 128 caracteres')
     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
     .withMessage('La nueva contraseña debe contener al menos: una letra minúscula, una mayúscula, un número y un carácter especial (@$!%*?&)'),
-  
+
   body('confirmar_password')
     .notEmpty()
     .withMessage('La confirmación de contraseña es obligatoria')
@@ -107,7 +107,7 @@ export const validarHistorialActividad = [
     .isInt({ min: 1, max: 100 })
     .withMessage('El límite debe ser un número entre 1 y 100')
     .toInt(),
-  
+
   param('pagina')
     .optional()
     .isInt({ min: 1 })
@@ -129,6 +129,6 @@ export const sanitizarDatosPerfil = (req, res, next) => {
   if (req.body.telefono) {
     req.body.telefono = req.body.telefono.replace(/\D/g, ''); // Solo números
   }
-  
+
   next();
 };

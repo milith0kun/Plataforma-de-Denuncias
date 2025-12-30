@@ -6,6 +6,58 @@ import BottomNavigation from '../../components/common/BottomNavigation/BottomNav
 import denunciaService from '../../services/denunciaService';
 import styles from './SeguimientoDenunciaPage.module.css';
 
+// Iconos SVG minimalistas
+const TagIcon = () => (
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+    <line x1="7" y1="7" x2="7.01" y2="7"></line>
+  </svg>
+);
+
+const CalendarIcon = () => (
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+    <line x1="16" y1="2" x2="16" y2="6"></line>
+    <line x1="8" y1="2" x2="8" y2="6"></line>
+    <line x1="3" y1="10" x2="21" y2="10"></line>
+  </svg>
+);
+
+const FolderIcon = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+  </svg>
+);
+
+const RefreshIcon = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="23 4 23 10 17 10"></polyline>
+    <polyline points="1 20 1 14 7 14"></polyline>
+    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+  </svg>
+);
+
+const MapPinIcon = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+    <circle cx="12" cy="10" r="3"></circle>
+  </svg>
+);
+
+const UserIcon = () => (
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+    <circle cx="12" cy="7" r="4"></circle>
+  </svg>
+);
+
+const ArrowRightIcon = () => (
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="5" y1="12" x2="19" y2="12"></line>
+    <polyline points="12 5 19 12 12 19"></polyline>
+  </svg>
+);
+
 const SeguimientoDenunciaPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -81,13 +133,25 @@ const SeguimientoDenunciaPage = () => {
     });
   };
 
+  const formatearIdDenuncia = (idDenuncia) => {
+    if (!idDenuncia) return '';
+    // Convertir ObjectId a número secuencial simple
+    const hash = idDenuncia.toString().split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return (1000 + (hash % 9000)).toString();
+  };
+
   const calcularProgreso = () => {
-    if (!denuncia) return 0;
+    if (!denuncia || !denuncia.id_estado_actual) return 0;
 
-    const estadoActual = denuncia.id_estado_actual;
-    const totalEstados = 6; // Registrada, Pendiente, En Proceso, Asignada, Resuelta, Cerrada
+    const estadoActual = parseInt(denuncia.id_estado_actual);
+    if (isNaN(estadoActual)) return 0;
 
-    return Math.round((estadoActual / totalEstados) * 100);
+    // Estados: 1=Registrada, 2=Pendiente, 3=En Proceso, 4=Asignada, 5=Resuelta, 6=Cerrada
+    const totalEstados = 5; // Máximo estado útil (Resuelta)
+
+    // Calcular porcentaje basado en el estado actual
+    const porcentaje = Math.min(Math.round((estadoActual / totalEstados) * 100), 100);
+    return porcentaje;
   };
 
   const obtenerEstiloEstado = (estadoNombre) => {
@@ -173,30 +237,44 @@ const SeguimientoDenunciaPage = () => {
             </div>
           ) : (
             <div className={styles.denunciasList}>
-              {denuncias.map((den) => (
-                <div
-                  key={den.id_denuncia}
-                  className={styles.denunciaCard}
-                  onClick={() => navigate(`/seguimiento/${den.id_denuncia}`)}
-                >
-                  <div className={styles.denunciaCardHeader}>
+              {denuncias.map((den) => {
+                return (
+                  <div
+                    key={den.id_denuncia}
+                    className={styles.denunciaCard}
+                    onClick={() => navigate(`/seguimiento/${den.id_denuncia}`)}
+                  >
+                    <div className={styles.denunciaCardHeader}>
+                      <span className={styles.denunciaCardId}>{formatearIdDenuncia(den.id_denuncia)}</span>
+                      <span
+                        className={styles.denunciaCardEstado}
+                        style={{ backgroundColor: obtenerColorEstado(den.estado_nombre) }}
+                      >
+                        {den.estado_nombre}
+                      </span>
+                    </div>
                     <h3 className={styles.denunciaCardTitle}>{den.titulo}</h3>
-                    <span
-                      className={styles.denunciaCardEstado}
-                      style={{ backgroundColor: obtenerColorEstado(den.estado_nombre) }}
-                    >
-                      {den.estado_nombre}
-                    </span>
+                    {den.descripcion && (
+                      <p className={styles.denunciaCardDescripcion}>
+                        {den.descripcion.length > 100
+                          ? `${den.descripcion.substring(0, 100)}...`
+                          : den.descripcion}
+                      </p>
+                    )}
+                    <div className={styles.denunciaCardMeta}>
+                      <span className={styles.denunciaCardCategoria}>
+                        <TagIcon /> {den.categoria_nombre}
+                      </span>
+                      <span className={styles.denunciaCardFecha}>
+                        <CalendarIcon /> {new Date(den.fecha_registro).toLocaleDateString('es-ES')}
+                      </span>
+                    </div>
+                    <button className={styles.denunciaCardButton}>
+                      Ver Detalles <ArrowRightIcon />
+                    </button>
                   </div>
-                  <p className={styles.denunciaCardCategoria}>{den.categoria_nombre}</p>
-                  <p className={styles.denunciaCardFecha}>
-                    Registrada el {new Date(den.fecha_registro).toLocaleDateString('es-ES')}
-                  </p>
-                  <button className={styles.denunciaCardButton}>
-                    Ver seguimiento →
-                  </button>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -244,7 +322,7 @@ const SeguimientoDenunciaPage = () => {
           <div className={styles.headerContent}>
             <h1 className={styles.title}>Seguimiento de Denuncia</h1>
             <p className={styles.denunciaTitle}>{denuncia.titulo}</p>
-            <p className={styles.denunciaId}>ID: #{denuncia.id_denuncia}</p>
+            <p className={styles.denunciaId}>ID: #{formatearIdDenuncia(denuncia.id_denuncia)}</p>
           </div>
         </div>
 
@@ -273,6 +351,45 @@ const SeguimientoDenunciaPage = () => {
                 backgroundColor: estiloEstadoActual.color
               }}
             ></div>
+          </div>
+        </div>
+
+        {/* Información adicional */}
+        <div className={styles.infoSection}>
+          <div className={styles.infoCard}>
+            <h3 className={styles.infoCardTitle}>Información de la Denuncia</h3>
+            <div className={styles.infoGrid}>
+              <div className={styles.infoItem}>
+                <span className={styles.infoIcon}><FolderIcon /></span>
+                <div>
+                  <p className={styles.infoLabel}>Categoría</p>
+                  <p className={styles.infoValue}>{denuncia.categoria_nombre}</p>
+                </div>
+              </div>
+              <div className={styles.infoItem}>
+                <span className={styles.infoIcon}><CalendarIcon /></span>
+                <div>
+                  <p className={styles.infoLabel}>Fecha de Registro</p>
+                  <p className={styles.infoValue}>{formatearFecha(denuncia.fecha_registro)}</p>
+                </div>
+              </div>
+              <div className={styles.infoItem}>
+                <span className={styles.infoIcon}><RefreshIcon /></span>
+                <div>
+                  <p className={styles.infoLabel}>Última Actualización</p>
+                  <p className={styles.infoValue}>{formatearFecha(denuncia.ultima_actualizacion)}</p>
+                </div>
+              </div>
+              <div className={styles.infoItem}>
+                <span className={styles.infoIcon}><MapPinIcon /></span>
+                <div>
+                  <p className={styles.infoLabel}>Ubicación</p>
+                  <p className={styles.infoValue}>
+                    {denuncia.direccion_geolocalizada || 'No especificada'}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -324,7 +441,7 @@ const SeguimientoDenunciaPage = () => {
                         {item.usuario_nombres && (
                           <div className={styles.timelineFooter}>
                             <span className={styles.timelineUsuario}>
-                              👤 {item.usuario_nombres} {item.usuario_apellidos}
+                              <UserIcon /> {item.usuario_nombres} {item.usuario_apellidos}
                             </span>
                           </div>
                         )}
@@ -341,44 +458,7 @@ const SeguimientoDenunciaPage = () => {
           )}
         </div>
 
-        {/* Información adicional */}
-        <div className={styles.infoSection}>
-          <div className={styles.infoCard}>
-            <h3 className={styles.infoCardTitle}>Información de la Denuncia</h3>
-            <div className={styles.infoGrid}>
-              <div className={styles.infoItem}>
-                <span className={styles.infoIcon}>📂</span>
-                <div>
-                  <p className={styles.infoLabel}>Categoría</p>
-                  <p className={styles.infoValue}>{denuncia.categoria_nombre}</p>
-                </div>
-              </div>
-              <div className={styles.infoItem}>
-                <span className={styles.infoIcon}>📅</span>
-                <div>
-                  <p className={styles.infoLabel}>Fecha de Registro</p>
-                  <p className={styles.infoValue}>{formatearFecha(denuncia.fecha_registro)}</p>
-                </div>
-              </div>
-              <div className={styles.infoItem}>
-                <span className={styles.infoIcon}>🔄</span>
-                <div>
-                  <p className={styles.infoLabel}>Última Actualización</p>
-                  <p className={styles.infoValue}>{formatearFecha(denuncia.ultima_actualizacion)}</p>
-                </div>
-              </div>
-              <div className={styles.infoItem}>
-                <span className={styles.infoIcon}>📍</span>
-                <div>
-                  <p className={styles.infoLabel}>Ubicación</p>
-                  <p className={styles.infoValue}>
-                    {denuncia.direccion_geolocalizada || 'No especificada'}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+
 
         {/* Botones de acción */}
         <div className={styles.actionSection}>

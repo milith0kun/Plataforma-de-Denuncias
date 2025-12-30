@@ -32,8 +32,15 @@ const NotificationDropdown = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [notificaciones, setNotificaciones] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [hasAuthError, setHasAuthError] = useState(false);
     const dropdownRef = useRef(null);
+    const intervalRef = useRef(null);
     const navigate = useNavigate();
+
+    // Verificar si hay token antes de hacer llamadas
+    const isAuthenticated = () => {
+        return !!localStorage.getItem('token');
+    };
 
     // Cerrar al hacer click fuera
     useEffect(() => {
@@ -47,22 +54,46 @@ const NotificationDropdown = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    // Cargar notificaciones
+    // Cargar notificaciones solo si hay autenticación
     const cargarNotificaciones = async () => {
+        // No hacer la llamada si no hay token o si hay error de auth
+        if (!isAuthenticated() || hasAuthError) {
+            return;
+        }
+
         try {
             const data = await notificacionService.obtenerNotificaciones({ limite: 10 });
             setNotificaciones(data.data || []);
+            setHasAuthError(false); // Reset si fue exitoso
         } catch (error) {
-            console.error('Error cargando notificaciones:', error);
+            // Si es error 401, marcar error de auth y no reintentar
+            if (error.response?.status === 401) {
+                setHasAuthError(true);
+                if (intervalRef.current) {
+                    clearInterval(intervalRef.current);
+                    intervalRef.current = null;
+                }
+            }
+            // Solo loguear errores que no sean 401 (ya manejamos el 401 arriba)
+            if (error.response?.status !== 401) {
+                console.error('Error cargando notificaciones:', error);
+            }
         }
     };
 
     // Efecto inicial y polling
     useEffect(() => {
-        cargarNotificaciones();
-        // Polling cada 30 segundos
-        const interval = setInterval(cargarNotificaciones, 30000);
-        return () => clearInterval(interval);
+        if (isAuthenticated()) {
+            cargarNotificaciones();
+            // Polling cada 30 segundos solo si hay autenticación
+            intervalRef.current = setInterval(cargarNotificaciones, 30000);
+        }
+
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        };
     }, []);
 
     const handleToggle = () => {
