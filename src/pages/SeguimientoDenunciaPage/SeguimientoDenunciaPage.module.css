@@ -1,12 +1,20 @@
 .pageContainer {
   min-height: 100vh;
   background-color: var(--color-background);
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 .container {
-  max-width: 900px;
+  max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: 32px 24px;
+  padding-top: 37px;
+  padding-bottom: 120px;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 @media (max-width: 1024px) {
@@ -479,18 +487,21 @@
 .denunciaCardHeader {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
-.denunciaCardTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--color-gray-900);
-  margin: 0;
-  flex: 1;
-  line-height: 1.4;
+.denunciaCardId {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: var(--color-primary);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: white;
+  font-family: 'Courier New', monospace;
 }
 
 .denunciaCardEstado {
@@ -502,32 +513,74 @@
   white-space: nowrap;
 }
 
-.denunciaCardCategoria {
+.denunciaCardTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-gray-900);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.4;
+}
+
+.denunciaCardDescripcion {
   color: var(--color-gray-600);
-  font-size: 0.9rem;
-  margin: 0.5rem 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+  text-align: justify;
+}
+
+.denunciaCardMeta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.denunciaCardCategoria {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-gray-600);
+  font-size: 0.813rem;
+  font-weight: 500;
+}
+
+.denunciaCardCategoria svg {
+  width: 14px;
+  height: 14px;
+  color: var(--color-gray-400);
 }
 
 .denunciaCardFecha {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   color: var(--color-gray-500);
-  font-size: 0.85rem;
-  margin: 0.5rem 0 1rem 0;
+  font-size: 0.813rem;
+}
+
+.denunciaCardFecha svg {
+  width: 14px;
+  height: 14px;
+  color: var(--color-gray-400);
 }
 
 .denunciaCardButton {
   width: 100%;
   padding: 0.75rem;
-  background: var(--color-primary);
-  color: white;
-  border: none;
+  background: white;
+  color: var(--color-gray-700);
+  border: 1px solid var(--color-gray-300);
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  font-size: 0.875rem;
 }
 
 .denunciaCardButton:hover {
-  background: var(--color-primary-dark);
+  background: var(--color-gray-50);
+  border-color: var(--color-gray-400);
 }
 
 .emptyState {
@@ -607,8 +660,9 @@
 /* Responsive */
 @media (max-width: 768px) {
   .container {
-    padding: 1rem;
-    padding-bottom: 150px;
+    padding: 0.75rem;
+    padding-top: 26px;
+    padding-bottom: calc(150px + 1rem);
     /* Espacio amplio para bottom navigation */
   }
 
@@ -653,5 +707,37 @@
   .actionButton,
   .actionButtonSecondary {
     min-width: 100%;
+  }
+
+  .denunciaCardId {
+    font-size: 0.75rem;
+    padding: 3px 10px;
+  }
+
+  .denunciaCardTitle {
+    font-size: 1rem;
+  }
+
+  .denunciaCardDescripcion {
+    font-size: 0.813rem;
+  }
+
+  .denunciaCardMeta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .denunciaCardCategoria,
+  .denunciaCardFecha {
+    font-size: 0.75rem;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0.75rem;
+    padding-top: 26px;
+    padding-bottom: calc(150px + 1rem);
   }
 }
