@@ -326,6 +326,111 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* ============================================
+   ESTILOS GLOBALES PARA DARK MODE
+   Sobrescriben CSS Modules para dark mode universal
+   ============================================ */
+[data-theme="dark"] {
+  /* Forzar colores de fondo oscuro en elementos comunes */
+  background-color: var(--bg-primary);
+}
+
+[data-theme="dark"] #root {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Sobrescribir fondos blancos y grises claros en dark mode */
+[data-theme="dark"] div[class*="container"],
+[data-theme="dark"] div[class*="wrapper"],
+[data-theme="dark"] div[class*="content"],
+[data-theme="dark"] section,
+[data-theme="dark"] article,
+[data-theme="dark"] main {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Cards y tarjetas */
+[data-theme="dark"] div[class*="card"]:not([class*="metric"]):not([class*="action"]),
+[data-theme="dark"] div[class*="Card"]:not([class*="metric"]):not([class*="action"]) {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Forms e inputs */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* Tablas */
+[data-theme="dark"] table {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] th {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-secondary) !important;
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] td {
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] tr:hover {
+  background-color: var(--bg-hover) !important;
+}
+
+/* Modales y dropdowns */
+[data-theme="dark"] div[class*="modal"],
+[data-theme="dark"] div[class*="Modal"],
+[data-theme="dark"] div[class*="dropdown"],
+[data-theme="dark"] div[class*="Dropdown"],
+[data-theme="dark"] div[class*="menu"],
+[data-theme="dark"] div[class*="Menu"] {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Headings y párrafos en dark mode */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] p,
+[data-theme="dark"] span:not([class*="badge"]):not([class*="icon"]) {
+  color: var(--text-primary) !important;
+}
+
+/* Labels y small text */
+[data-theme="dark"] label {
+  color: var(--text-secondary) !important;
+}
+
+/* Links (preservar color primario) */
+[data-theme="dark"] a {
+  color: var(--primary-color) !important;
+}
+
 * {
   margin: 0;
   padding: 0;
