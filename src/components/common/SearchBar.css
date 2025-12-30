@@ -1,0 +1,115 @@
+/* ============================================
+   SEARCH BAR COMPONENT STYLES
+   ============================================ */
+
+.search-bar {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-input-wrapper:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background: var(--bg-primary);
+}
+
+/* Icono de búsqueda */
+.search-icon {
+    color: var(--text-muted);
+    margin-right: 0.75rem;
+    transition: color 0.3s ease;
+}
+
+.search-input-wrapper:focus-within .search-icon {
+    color: var(--primary-color);
+}
+
+/* Input de búsqueda */
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-family: inherit;
+}
+
+.search-input::placeholder {
+    color: var(--text-muted);
+}
+
+/* Botón de limpiar */
+.search-clear-btn {
+    background: var(--bg-hover);
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    padding: 0;
+    margin-left: 0.5rem;
+}
+
+.search-clear-btn:hover {
+    background: var(--border-color);
+    color: var(--text-primary);
+    transform: scale(1.1);
+}
+
+.search-clear-btn:active {
+    transform: scale(0.95);
+}
+
+/* Animación de entrada */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.search-bar {
+    animation: slideDown 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .search-bar {
+        margin-bottom: 1rem;
+    }
+
+    .search-input-wrapper {
+        padding: 0.6rem 0.8rem;
+    }
+
+    .search-input {
+        font-size: 0.9rem;
+    }
+
+    .search-icon {
+        margin-right: 0.5rem;
+    }
+}
