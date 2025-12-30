@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
+import ThemeToggle from '../ThemeToggle';
 import styles from './Header.module.css';
 import NotificationDropdown from './NotificationDropdown';
 
@@ -305,6 +306,9 @@ const Header = ({ variant }) => {
           {/* Notificaciones */}
           {/* Notificaciones */}
           <NotificationDropdown />
+
+          {/* Toggle de tema */}
+          <ThemeToggle />
 
           {/* Perfil */}
           <div className={styles.profileMenu} ref={dropdownRef}>
