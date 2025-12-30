@@ -139,7 +139,7 @@ const DetalleDenunciaPage = () => {
   };
 
   const obtenerClaseEstado = (estado) => {
-    if (!estado) return '';
+    if (!estado) return styles.estadoDesconocido; // Clase para estados desconocidos
     const estadoLower = estado.toLowerCase().replace(/\s+/g, '');
     if (estadoLower === 'registrada' || estadoLower === 'enrevision' || estadoLower === 'pendiente') {
       return styles.estadoPendiente;

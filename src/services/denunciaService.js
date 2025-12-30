@@ -152,13 +152,21 @@ const denunciaService = {
       const denuncias = response.data.denuncias;
 
       // Calcular estadísticas
-      const estadisticas = {
-        total: denuncias.length,
-        pendientes: denuncias.filter(d => d.id_estado_actual === 1 || d.id_estado_actual === 2).length,
-        enProceso: denuncias.filter(d => d.id_estado_actual === 3 || d.id_estado_actual === 4).length,
-        resueltas: denuncias.filter(d => d.id_estado_actual === 5).length,
-        cerradas: denuncias.filter(d => d.id_estado_actual === 6).length
+      const estados = {
+        pendientes: [1, 2],
+        enProceso: [3, 4],
+        resueltas: [5],
+        cerradas: [6]
       };
+
+      const estadisticas = Object.fromEntries(
+        Object.entries(estados).map(([key, valores]) => [
+          key,
+          denuncias.filter(d => valores.includes(d.id_estado_actual)).length
+        ])
+      );
+
+      estadisticas.total = denuncias.length;
 
       return estadisticas;
     } catch (error) {

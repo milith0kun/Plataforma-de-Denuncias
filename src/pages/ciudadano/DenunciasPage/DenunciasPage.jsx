@@ -318,6 +318,11 @@ const DenunciasPage = () => {
               </button>
             </div>
           )}
+          {denunciasFiltradas.length === 0 && (
+            <div className={styles.emptyState}>
+              <p>No se encontraron denuncias con el filtro seleccionado.</p>
+            </div>
+          )}
         </div>
       </div>
       {isMobile && <BottomNavigation userType={esAutoridad ? "autoridad" : "ciudadano"} />}

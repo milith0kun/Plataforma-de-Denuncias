@@ -42,8 +42,10 @@ const authService = {
 
   // Logout
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('usuario');
+    if (window.confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+    }
   },
 
   // Verificar token

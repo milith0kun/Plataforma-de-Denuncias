@@ -168,7 +168,13 @@ const SeguimientoDenunciaPage = () => {
       'cerrada': { color: 'var(--color-estado-cerrada)', icon: '🔒' }
     };
 
-    return mapeo[estado] || { color: 'var(--color-gray-500)', icon: '📋' };
+    return mapeo[estado] || { color: 'var(--color-estado-desconocido)', icon: '❓' }; // Fallback para estados desconocidos
+  };
+
+  const handleNavigation = (url) => {
+    if (window.confirm('¿Estás seguro de que deseas salir de esta página? Se perderán los cambios no guardados.')) {
+      navigate(url);
+    }
   };
 
   if (cargando) {
@@ -304,7 +310,7 @@ const SeguimientoDenunciaPage = () => {
   const estiloEstadoActual = obtenerEstiloEstado(denuncia.estado_nombre);
 
   return (
-    <div className={styles.pageContainer}>
+    <div className={styles.pageContainer} style={{ background: 'linear-gradient(to bottom, #f0f4f8, #d9e2ec)' }}>
       <Header />
 
       <div className={styles.container}>
@@ -470,7 +476,7 @@ const SeguimientoDenunciaPage = () => {
           </button>
           <button
             className={styles.actionButtonSecondary}
-            onClick={() => navigate(-1)}
+            onClick={() => handleNavigation(-1)}
           >
             Volver a Mis Denuncias
           </button>

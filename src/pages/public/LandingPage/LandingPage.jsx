@@ -179,7 +179,7 @@ const LandingPage = () => {
               <div key={index} className="category-card">
                 <LottieIcon 
                   src={categoria.icono} 
-                  alt={categoria.nombre} 
+                  alt={`Icono representando la categoría ${categoria.nombre}`} 
                   className="category-icon"
                   width={50}
                   height={50}
