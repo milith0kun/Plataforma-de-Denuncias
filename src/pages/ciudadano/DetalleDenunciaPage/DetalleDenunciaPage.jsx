@@ -131,6 +131,13 @@ const DetalleDenunciaPage = () => {
     });
   };
 
+  const formatearIdDenuncia = (idDenuncia) => {
+    if (!idDenuncia) return '';
+    // Convertir ObjectId a número secuencial simple
+    const hash = idDenuncia.toString().split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return (1000 + (hash % 9000)).toString();
+  };
+
   const obtenerClaseEstado = (estado) => {
     if (!estado) return '';
     const estadoLower = estado.toLowerCase().replace(/\s+/g, '');
@@ -230,7 +237,7 @@ const DetalleDenunciaPage = () => {
             </div>
             <div className={styles.idBadge}>
               <span className={styles.idLabel}>ID</span>
-              <span className={styles.idNumber}>#{denuncia.id_denuncia}</span>
+              <span className={styles.idNumber}>#{formatearIdDenuncia(denuncia.id_denuncia)}</span>
             </div>
           </div>
 
@@ -256,45 +263,52 @@ const DetalleDenunciaPage = () => {
             <h3 className={styles.progressTitle}>Progreso de la Denuncia</h3>
           </div>
           <div className={styles.progressBar}>
-            <div className={`${styles.progressStep} ${styles.completed}`}>
+            {/* Paso 1: Registrada */}
+            <div className={`${styles.progressStep} ${denuncia.id_estado_actual >= 1 ? styles.completed : styles.current}`}>
               <div className={styles.stepCircle}>
-                <span className={styles.stepIcon}>✓</span>
+                <span className={styles.stepIcon}>{denuncia.id_estado_actual >= 1 ? '✓' : '1'}</span>
               </div>
               <span className={styles.stepLabel}>Registrada</span>
             </div>
             <div className={styles.progressLine}></div>
-            <div className={`${styles.progressStep} ${['En Revisión', 'Asignada', 'En Proceso', 'Resuelta', 'Cerrada'].includes(denuncia.estado_nombre) ? styles.completed : styles.current}`}>
+
+            {/* Paso 2: En Revisión */}
+            <div className={`${styles.progressStep} ${denuncia.id_estado_actual >= 3 ? styles.completed : denuncia.id_estado_actual === 2 ? styles.current : ''}`}>
               <div className={styles.stepCircle}>
-                <span className={styles.stepIcon}>{['En Revisión', 'Asignada', 'En Proceso', 'Resuelta', 'Cerrada'].includes(denuncia.estado_nombre) ? '✓' : '2'}</span>
+                <span className={styles.stepIcon}>{denuncia.id_estado_actual >= 3 ? '✓' : '2'}</span>
               </div>
               <span className={styles.stepLabel}>En Revisión</span>
             </div>
             <div className={styles.progressLine}></div>
-            <div className={`${styles.progressStep} ${['En Proceso', 'Resuelta', 'Cerrada'].includes(denuncia.estado_nombre) ? styles.completed : ['En Revisión', 'Asignada'].includes(denuncia.estado_nombre) ? styles.current : ''}`}>
+
+            {/* Paso 3: En Proceso */}
+            <div className={`${styles.progressStep} ${denuncia.id_estado_actual >= 4 ? styles.completed : denuncia.id_estado_actual === 3 ? styles.current : ''}`}>
               <div className={styles.stepCircle}>
-                <span className={styles.stepIcon}>{['En Proceso', 'Resuelta', 'Cerrada'].includes(denuncia.estado_nombre) ? '✓' : '3'}</span>
+                <span className={styles.stepIcon}>{denuncia.id_estado_actual >= 4 ? '✓' : '3'}</span>
               </div>
               <span className={styles.stepLabel}>En Proceso</span>
             </div>
             <div className={styles.progressLine}></div>
-            <div className={`${styles.progressStep} ${['Resuelta', 'Cerrada'].includes(denuncia.estado_nombre) ? styles.completed : denuncia.estado_nombre === 'En Proceso' ? styles.current : ''}`}>
+
+            {/* Paso 4: Resuelta */}
+            <div className={`${styles.progressStep} ${denuncia.id_estado_actual >= 5 ? styles.completed : denuncia.id_estado_actual === 4 ? styles.current : ''}`}>
               <div className={styles.stepCircle}>
-                <span className={styles.stepIcon}>{['Resuelta', 'Cerrada'].includes(denuncia.estado_nombre) ? '✓' : '4'}</span>
+                <span className={styles.stepIcon}>{denuncia.id_estado_actual >= 5 ? '✓' : '4'}</span>
               </div>
               <span className={styles.stepLabel}>Resuelta</span>
             </div>
           </div>
 
           {/* Próximos pasos */}
-          {denuncia.estado_nombre !== 'Resuelta' && denuncia.estado_nombre !== 'Cerrada' && (
+          {denuncia.id_estado_actual < 5 && (
             <div className={styles.nextSteps}>
               <h4 className={styles.nextStepsTitle}>📌 Qué sigue:</h4>
               <p className={styles.nextStepsText}>
-                {denuncia.estado_nombre === 'Registrada' || denuncia.estado_nombre === 'Pendiente' ?
+                {denuncia.id_estado_actual === 1 ?
                   'Tu denuncia será revisada por las autoridades competentes. Recibirás una notificación cuando sea asignada a un área responsable.' :
-                  denuncia.estado_nombre === 'En Revisión' || denuncia.estado_nombre === 'Asignada' ?
+                  denuncia.id_estado_actual === 2 ?
                     'Las autoridades están evaluando tu denuncia y definiendo las acciones a tomar. Te notificaremos cuando inicien el trabajo de resolución.' :
-                    denuncia.estado_nombre === 'En Proceso' ?
+                    denuncia.id_estado_actual === 3 || denuncia.id_estado_actual === 4 ?
                       'El área responsable está trabajando en resolver tu denuncia. Te mantendremos informado del avance.' :
                       'Estamos trabajando en tu denuncia.'
                 }

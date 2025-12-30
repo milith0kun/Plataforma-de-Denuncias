@@ -77,10 +77,11 @@ const GestionDenunciasPage = () => {
     });
   };
 
-  const formatearIdDenuncia = (numeroSecuencial) => {
-    if (!numeroSecuencial) return '';
-    // Retorna el número secuencial simple
-    return numeroSecuencial.toString();
+  const formatearIdDenuncia = (idDenuncia) => {
+    if (!idDenuncia) return '';
+    // Convertir ObjectId a número secuencial simple
+    const hash = idDenuncia.toString().split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return (1000 + (hash % 9000)).toString();
   };
 
   const obtenerColorEstado = (estadoNombre) => {
@@ -345,11 +346,10 @@ const GestionDenunciasPage = () => {
                   </thead>
                   <tbody>
                     {denunciasPaginadas.map((denuncia, index) => {
-                      const numeroSecuencial = indicePrimero + index + 1001;
                       return (
                         <tr key={denuncia.id_denuncia} className={index % 2 === 0 ? styles.evenRow : styles.oddRow}>
                           <td className={styles.idCell}>
-                            <span className={styles.idBadge}>{formatearIdDenuncia(numeroSecuencial)}</span>
+                            <span className={styles.idBadge}>{formatearIdDenuncia(denuncia.id_denuncia)}</span>
                           </td>
                           <td className={styles.denunciaCell}>
                             <div className={styles.denunciaContent}>
