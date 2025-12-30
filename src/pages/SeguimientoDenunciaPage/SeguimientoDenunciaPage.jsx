@@ -40,8 +40,7 @@ const SeguimientoDenunciaPage = () => {
         setError(response.message || 'Error al cargar denuncias');
       }
     } catch (err) {
-      console.error('Error al cargar denuncias:', err);
-      setError(err.message || 'Error al cargar denuncias');
+      setError('Error de conexión');
     } finally {
       setCargando(false);
     }
@@ -222,7 +221,14 @@ const SeguimientoDenunciaPage = () => {
   const estiloEstadoActual = obtenerEstiloEstado(denuncia.estado_nombre);
 
   return (
-    <div className={styles.pageContainer}>
+    <div
+      className={styles.pageContainer}
+      style={{
+        background: 'linear-gradient(to bottom, #f0f4f8, #d9e2ec)',
+        minHeight: '100vh',
+        padding: '20px',
+      }}
+    >
       <Header />
 
       <div className={styles.container}>
