@@ -132,13 +132,13 @@ const HomePage = () => {
                 <LayoutDashboard size={20} />
                 <span>Dashboard</span>
               </a>
-              <a href="/nueva-denuncia" className={styles.navItem}>
-                <Plus size={20} />
-                <span>Nueva Denuncia</span>
-              </a>
               <a href="/denuncias" className={styles.navItem}>
                 <FileText size={20} />
                 <span>Mis Denuncias</span>
+              </a>
+              <a href="/nueva-denuncia" className={styles.navItem}>
+                <Plus size={20} />
+                <span>Nueva Denuncia</span>
               </a>
               <a href="/seguimiento" className={styles.navItem}>
                 <MapPin size={20} />
@@ -160,22 +160,32 @@ const HomePage = () => {
               <div className={styles.heroLeft}>
                 <h1>Hola, {usuario?.nombres} 👋</h1>
                 <p>Gestiona tus denuncias y contribuye a mejorar tu comunidad</p>
-                <div className={styles.heroActions}>
-                  <button
-                    className={styles.btnPrimary}
-                    onClick={() => navigate('/nueva-denuncia')}
-                  >
-                    <Plus size={20} />
-                    Nueva Denuncia
-                  </button>
-                  <button
-                    className={styles.btnSecondary}
-                    onClick={() => navigate('/denuncias')}
-                  >
-                    <FileText size={20} />
-                    Ver Mis Denuncias
-                  </button>
-                </div>
+                {/* Solo mostrar botones en desktop, en móvil ya están en BottomNavigation */}
+                {!isMobile && (
+                  <div className={styles.heroActions}>
+                    <button
+                      className={styles.btnPrimary}
+                      onClick={() => navigate('/nueva-denuncia')}
+                    >
+                      <Plus size={20} />
+                      Nueva Denuncia
+                    </button>
+                    <button
+                      className={styles.btnSecondary}
+                      onClick={() => navigate('/denuncias')}
+                    >
+                      <FileText size={20} />
+                      Ver Mis Denuncias
+                    </button>
+                    <button
+                      className={styles.btnSecondary}
+                      onClick={() => navigate('/perfil')}
+                    >
+                      <User size={20} />
+                      Mi Perfil
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

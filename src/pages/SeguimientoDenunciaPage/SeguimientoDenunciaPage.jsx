@@ -133,19 +133,25 @@ const SeguimientoDenunciaPage = () => {
     });
   };
 
-  const formatearIdDenuncia = (numeroSecuencial) => {
-    if (!numeroSecuencial) return '';
-    // Retorna el número secuencial simple
-    return numeroSecuencial.toString();
+  const formatearIdDenuncia = (idDenuncia) => {
+    if (!idDenuncia) return '';
+    // Convertir ObjectId a número secuencial simple
+    const hash = idDenuncia.toString().split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return (1000 + (hash % 9000)).toString();
   };
 
   const calcularProgreso = () => {
-    if (!denuncia) return 0;
+    if (!denuncia || !denuncia.id_estado_actual) return 0;
 
-    const estadoActual = denuncia.id_estado_actual;
-    const totalEstados = 6; // Registrada, Pendiente, En Proceso, Asignada, Resuelta, Cerrada
+    const estadoActual = parseInt(denuncia.id_estado_actual);
+    if (isNaN(estadoActual)) return 0;
 
-    return Math.round((estadoActual / totalEstados) * 100);
+    // Estados: 1=Registrada, 2=Pendiente, 3=En Proceso, 4=Asignada, 5=Resuelta, 6=Cerrada
+    const totalEstados = 5; // Máximo estado útil (Resuelta)
+
+    // Calcular porcentaje basado en el estado actual
+    const porcentaje = Math.min(Math.round((estadoActual / totalEstados) * 100), 100);
+    return porcentaje;
   };
 
   const obtenerEstiloEstado = (estadoNombre) => {
@@ -231,8 +237,7 @@ const SeguimientoDenunciaPage = () => {
             </div>
           ) : (
             <div className={styles.denunciasList}>
-              {denuncias.map((den, index) => {
-                const numeroSecuencial = index + 1001;
+              {denuncias.map((den) => {
                 return (
                   <div
                     key={den.id_denuncia}
@@ -240,7 +245,7 @@ const SeguimientoDenunciaPage = () => {
                     onClick={() => navigate(`/seguimiento/${den.id_denuncia}`)}
                   >
                     <div className={styles.denunciaCardHeader}>
-                      <span className={styles.denunciaCardId}>{formatearIdDenuncia(numeroSecuencial)}</span>
+                      <span className={styles.denunciaCardId}>{formatearIdDenuncia(den.id_denuncia)}</span>
                       <span
                         className={styles.denunciaCardEstado}
                         style={{ backgroundColor: obtenerColorEstado(den.estado_nombre) }}
@@ -317,7 +322,7 @@ const SeguimientoDenunciaPage = () => {
           <div className={styles.headerContent}>
             <h1 className={styles.title}>Seguimiento de Denuncia</h1>
             <p className={styles.denunciaTitle}>{denuncia.titulo}</p>
-            <p className={styles.denunciaId}>ID: #{denuncia.id_denuncia}</p>
+            <p className={styles.denunciaId}>ID: #{formatearIdDenuncia(denuncia.id_denuncia)}</p>
           </div>
         </div>
 

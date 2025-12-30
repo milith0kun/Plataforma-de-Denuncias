@@ -157,10 +157,9 @@ const Header = ({ variant }) => {
     if (esCiudadano) {
       return [
         { path: '/home', label: 'Dashboard', icon: 'dashboard' },
-        { path: '/nueva-denuncia', label: 'Nueva Denuncia', icon: 'plus', primary: true },
         { path: '/denuncias', label: 'Mis Denuncias', icon: 'list' },
-        { path: '/seguimiento', label: 'Seguimiento', icon: 'track' },
-        { path: '/mapa-denuncias', label: 'Mapa', icon: 'map' }
+        { path: '/nueva-denuncia', label: 'Nueva Denuncia', icon: 'plus', primary: true },
+        { path: '/seguimiento', label: 'Seguimiento', icon: 'track' }
       ];
     }
 
