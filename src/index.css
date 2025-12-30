@@ -244,6 +244,86 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+  /* === VARIABLES DINÁMICAS PARA TEMAS === */
+  /* Estas se sobrescriben en data-theme="dark" */
+  --primary-color: var(--color-primary);
+  --text-primary: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --text-muted: var(--color-text-muted);
+  --bg-primary: var(--color-bg-primary);
+  --bg-secondary: var(--color-bg-secondary);
+  --bg-tertiary: var(--color-bg-tertiary);
+  --bg-hover: var(--color-gray-100);
+  --border-color: var(--color-border);
+  --border-light: var(--color-border-light);
+}
+
+/* ============================================
+   TEMA OSCURO (DARK MODE)
+   ============================================ */
+[data-theme="dark"] {
+  /* Colores principales en modo oscuro */
+  --primary-color: #60a5fa;
+  /* Blue-400 - más claro para contraste */
+
+  /* Textos */
+  --text-primary: #f1f5f9;
+  /* slate-100 */
+  --text-secondary: #cbd5e1;
+  /* slate-300 */
+  --text-muted: #94a3b8;
+  /* slate-400 */
+
+  /* Backgrounds */
+  --bg-primary: #0f172a;
+  /* slate-900 */
+  --bg-secondary: #1e293b;
+  /* slate-800 */
+  --bg-tertiary: #334155;
+  /* slate-700 */
+  --bg-hover: #334155;
+  /* slate-700 */
+
+  /* Bordes */
+  --border-color: #334155;
+  /* slate-700 */
+  --border-light: #475569;
+  /* slate-600 */
+
+  /* Sombras ajustadas para modo oscuro */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+
+  /* Scrollbar para modo oscuro */
+  scrollbar-color: #475569 #1e293b;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-color: #334155;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Transición suave al cambiar de tema */
+:root,
+[data-theme="dark"] {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 * {

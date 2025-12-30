@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
+import ThemeToggle from '../ThemeToggle';
 import styles from './Navbar.module.css';
 
 /**
@@ -81,8 +82,8 @@ const Navbar = () => {
         {/* Menú de navegación */}
         <ul className={`${styles.navMenu} ${menuAbierto ? styles.navMenuActivo : ''}`}>
           <li>
-            <Link 
-              to="/inicio" 
+            <Link
+              to="/inicio"
               className={`${styles.navLink} ${esRutaActiva('/inicio') ? styles.navLinkActivo : ''}`}
             >
               <span className={styles.navIcon}>🏠</span>
@@ -90,8 +91,8 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            <Link 
-              to="/denuncias" 
+            <Link
+              to="/denuncias"
               className={`${styles.navLink} ${esRutaActiva('/denuncias') ? styles.navLinkActivo : ''}`}
             >
               <span className={styles.navIcon}>📋</span>
@@ -99,8 +100,8 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            <Link 
-              to="/nueva-denuncia" 
+            <Link
+              to="/nueva-denuncia"
               className={`${styles.navLink} ${esRutaActiva('/nueva-denuncia') ? styles.navLinkActivo : ''}`}
             >
               <span className={styles.navIcon}>📝</span>
@@ -111,6 +112,9 @@ const Navbar = () => {
 
         {/* Sección de usuario */}
         <div className={styles.userSection}>
+          {/* Toggle de tema */}
+          <ThemeToggle />
+
           {/* Notificaciones */}
           <button className={styles.notificationBtn} title="Notificaciones">
             <span className={styles.notificationIcon}>🔔</span>
@@ -152,7 +156,7 @@ const Navbar = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className={styles.profileActions}>
                   <Link
                     to="/perfil"
@@ -162,7 +166,7 @@ const Navbar = () => {
                     <span className={styles.actionIcon}>👤</span>
                     Mi Perfil
                   </Link>
-                  
+
                   {/* Rutas temporalmente comentadas hasta implementar
                   <Link
                     to="/configuracion"
@@ -182,7 +186,7 @@ const Navbar = () => {
                     Ayuda
                   </Link>
                   */}
-                  
+
                   <button
                     className={styles.logoutAction}
                     onClick={manejarLogout}

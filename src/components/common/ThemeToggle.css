@@ -1,0 +1,110 @@
+/* ============================================
+   THEME TOGGLE COMPONENT STYLES
+   ============================================ */
+
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    box-shadow: 0 2px 8px var(--shadow-sm);
+}
+
+.theme-toggle:hover {
+    background: var(--bg-hover);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-md);
+}
+
+.theme-toggle:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px var(--shadow-sm);
+}
+
+/* Icono del toggle */
+.theme-toggle-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    position: relative;
+}
+
+/* Animaciones para los iconos */
+.sun-icon {
+    animation: rotateIn 0.5s ease;
+    color: #FF9500;
+}
+
+.moon-icon {
+    animation: rotateIn 0.5s ease;
+    color: #5E5CE6;
+}
+
+@keyframes rotateIn {
+    from {
+        transform: rotate(-180deg) scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: rotate(0deg) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Label del toggle */
+.theme-toggle-label {
+    font-weight: 600;
+    user-select: none;
+}
+
+/* Responsive - Móviles */
+@media (max-width: 768px) {
+    .theme-toggle {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .theme-toggle-label {
+        display: none;
+    }
+
+    .theme-toggle-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .sun-icon,
+    .moon-icon {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* Efecto de pulso sutil */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.theme-toggle:hover .theme-toggle-icon {
+    animation: pulse 1.5s ease infinite;
+}
