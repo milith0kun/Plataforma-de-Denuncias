@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
+import ThemeToggle from '../../../components/common/ThemeToggle';
 import Input from '../../../components/common/Input/Input';
 import Button from '../../../components/common/Button/Button';
 import Alert from '../../../components/common/Alert/Alert';
@@ -118,6 +119,11 @@ const RegisterPage = () => {
 
   return (
     <div className={styles['register-container']}>
+      {/* Toggle de tema flotante en esquina superior derecha */}
+      <div style={{ position: 'fixed', top: '1.5rem', right: '1.5rem', zIndex: 1000 }}>
+        <ThemeToggle />
+      </div>
+
       <div className={styles['register-card']}>
         <div className={styles['register-header']}>
           <h1 className={styles['register-title']}>Registro de Ciudadano</h1>

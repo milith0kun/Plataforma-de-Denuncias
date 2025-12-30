@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
 import { useGoogleAuth } from '../../../hooks/useGoogleAuth';
+import ThemeToggle from '../../../components/common/ThemeToggle';
 import Input from '../../../components/common/Input/Input';
 import Button from '../../../components/common/Button/Button';
 import Alert from '../../../components/common/Alert/Alert';
@@ -187,6 +188,11 @@ const LoginPage = () => {
 
   return (
     <div className={styles['login-container']}>
+      {/* Toggle de tema flotante en esquina superior derecha */}
+      <div style={{ position: 'fixed', top: '1.5rem', right: '1.5rem', zIndex: 1000 }}>
+        <ThemeToggle />
+      </div>
+
       <div className={styles['login-card']}>
         {/* Lado Izquierdo - Información */}
         <div className={styles['info-section']}>
