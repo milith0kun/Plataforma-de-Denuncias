@@ -1,0 +1,224 @@
+/* ============================================
+   DASHBOARD STATS COMPONENT STYLES
+   ============================================ */
+
+.dashboard-stats {
+    width: 100%;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Grid de tarjetas de estadísticas */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Grid de gráficos */
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Contenedor de gráfico individual */
+.chart-container {
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+    animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chart-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 1.25rem 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+/* Sección de porcentaje de resolución */
+.resolution-percentage {
+    margin-top: 2rem;
+}
+
+.percentage-card {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #2563eb 100%);
+    border-radius: 16px;
+    padding: 2rem;
+    color: white;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    animation: scaleIn 0.6s ease;
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.percentage-title {
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 1rem 0;
+    opacity: 0.9;
+}
+
+.percentage-value {
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1;
+    margin: 0.5rem 0 1.5rem 0;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: countUp 1s ease;
+}
+
+@keyframes countUp {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.percentage-bar {
+    width: 100%;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 1rem 0;
+}
+
+.percentage-fill {
+    height: 100%;
+    background: white;
+    border-radius: 6px;
+    transition: width 1s ease;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.percentage-label {
+    font-size: 0.875rem;
+    margin: 1rem 0 0 0;
+    opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .charts-grid {
+        gap: 1rem;
+    }
+
+    .chart-container {
+        padding: 1rem;
+    }
+
+    .chart-title {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .percentage-card {
+        padding: 1.5rem;
+    }
+
+    .percentage-value {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .percentage-value {
+        font-size: 2.5rem;
+    }
+
+    .percentage-title {
+        font-size: 0.875rem;
+    }
+}
+
+/* Estilos para tooltips de Recharts en modo oscuro */
+[data-theme="dark"] .recharts-tooltip-wrapper {
+    outline: none;
+}
+
+[data-theme="dark"] .recharts-default-tooltip {
+    background-color: var(--bg-secondary) !important;
+    border: 2px solid var(--border-color) !important;
+    border-radius: 8px !important;
+}
+
+[data-theme="dark"] .recharts-tooltip-label {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .recharts-tooltip-item {
+    color: var(--text-secondary) !important;
+}
+
+/* Animación de hover para gráficos */
+.chart-container:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-color);
+    transition: all 0.3s ease;
+}
