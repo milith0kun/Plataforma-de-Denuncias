@@ -1,7 +1,7 @@
 providers = ["node"]
 
 [phases.setup]
-nixPkgs = ["nodejs_22", "npm"]
+nixPkgs = ["nodejs_22"]
 
 [phases.install]
 cmds = ["npm install"]
