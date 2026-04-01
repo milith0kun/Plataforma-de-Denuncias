@@ -1,2 +1,10 @@
+providers = ["node"]
+
+[phases.setup]
+nixPkgs = ["nodejs_22", "npm"]
+
 [phases.install]
-cmds = ['npm install']
+cmds = ["npm install"]
+
+[phases.build]
+cmds = ["npm run build"]
