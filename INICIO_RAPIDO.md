@@ -21,8 +21,8 @@ Abre el archivo `Servidor/.env` y configura las siguientes variables:
 PORT=5000
 NODE_ENV=development
 
-# MongoDB Atlas URI
-MONGODB_URI=mongodb+srv://174449_db_user:1997281qA@cluster0.feeeugl.mongodb.net/denuncias_db?retryWrites=true&w=majority&appName=Cluster0
+# MongoDB Atlas URI (obténla en MongoDB Atlas → Connect)
+MONGODB_URI=mongodb+srv://<USUARIO>:<PASSWORD>@<CLUSTER>.mongodb.net/denuncias_db?retryWrites=true&w=majority&appName=Cluster0
 
 # JWT Secret (cambia esto por una clave segura)
 JWT_SECRET=tu_clave_secreta_super_segura_aqui_cambiar_en_produccion
